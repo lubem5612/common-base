@@ -16,8 +16,10 @@
         }
     ],
     "require": {
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^7.5",
         "illuminate/contracts": "7.* || ^8.15 || 9.0 - 9.34 || ^9.36 || ^10.0",
-        "ext-json": "*"
+        "swiftmailer/swiftmailer": "^6.3"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
@@ -50,5 +52,6 @@
                 "RaadaaBase": "Raadaa\\RaadaaBase\\RaadaaBaseFacade"
             }
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
