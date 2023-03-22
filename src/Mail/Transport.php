@@ -41,7 +41,7 @@ class Transport implements Swift_Transport {
      * @throws \Swift_DependencyException
      */
     public function __construct($serverToken, array $defaultHeaders = []) {
-        $this->serverToken = config('raadaa.sendchamp.public_key', $serverToken);
+        $this->serverToken = config('raadaabase.sendchamp.public_key', $serverToken);
         $this->defaultHeaders = $defaultHeaders;
         $this->version = phpversion();
         $this->os = PHP_OS;

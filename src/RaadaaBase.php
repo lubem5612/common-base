@@ -1,8 +1,8 @@
 <?php
 
-namespace Raadaa\RaadaaBase;
+namespace Raadaapartners\Raadaabase;
 
-class RaadaaBase
+class Raadaabase
 {
-    // Build your next great package.
+    // Build wonderful things
 }

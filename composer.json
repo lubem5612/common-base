@@ -1,20 +1,16 @@
 {
-    "name": "raadaa/raadaa-base",
-    "description": "General Purpose Package for Raadaa Partners International Limited and sister companies",
-    "keywords": [
-        "raadaa",
-        "raadaa-base"
-    ],
-    "homepage": "https://github.com/raadaa/raadaa-base",
+    "name": "raadaapartners/raadaabase",
+    "description": ":package_description",
     "license": "MIT",
-    "type": "library",
     "authors": [
         {
-            "name": "Lubem Tser",
-            "email": "enginlubem@ymail.com",
-            "role": "Developer"
+            "name": "Author Name",
+            "email": "author@email.com",
+            "homepage": "http://author.com"
         }
     ],
+    "homepage": "https://github.com/raadaapartners/raadaabase",
+    "keywords": ["Laravel", "Raadaabase"],
     "require": {
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.5",
@@ -22,34 +18,26 @@
         "swiftmailer/swiftmailer": "^6.3"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.0",
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~7"
     },
     "autoload": {
         "psr-4": {
-            "Raadaa\\RaadaaBase\\": "src"
+            "Raadaapartners\\Raadaabase\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Raadaa\\RaadaaBase\\Tests\\": "tests"
+            "Raadaapartners\\Raadaabase\\Tests\\": "tests"
         }
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
-    },
-    "config": {
-        "sort-packages": true
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Raadaa\\RaadaaBase\\RaadaaBaseServiceProvider"
+                "Raadaapartners\\Raadaabase\\RaadaabaseServiceProvider"
             ],
             "aliases": {
-                "RaadaaBase": "Raadaa\\RaadaaBase\\RaadaaBaseFacade"
+                "Raadaabase": "Raadaapartners\\Raadaabase\\Facades\\Raadaabase"
             }
         }
     },

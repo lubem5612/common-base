@@ -24,8 +24,8 @@ class SmsService
     {
         $this->message = $message;
         $this->numbers = $numbers;
-        $this->route = config('raadaa.sendchamp.route');
-        $this->sender_name = config('raadaa.sendchamp.username');
+        $this->route = config('raadaabase.sendchamp.route');
+        $this->sender_name = config('raadaabase.sendchamp.username');
     }
 
     public function sendSMS()
@@ -40,7 +40,7 @@ class SmsService
             ];
             $url = 'https://api.sendchamp.com/api/v1/sms/send';
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.config('raadaa.sendchamp.public_key'),
+                'Authorization' => 'Bearer '.config('raadaabase.sendchamp.public_key'),
                 'Content-Type' => 'application/json',
                 'Cache-Control' => 'no-cache',
             ])->withoutVerifying()->post($url, $data)->json();

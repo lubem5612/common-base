@@ -1,7 +1,8 @@
 # Changelog
 
-All notable changes to `raadaa-base` will be documented in this file
+All notable changes to `Raadaabase` will be documented in this file.
 
-## 1.0.0 - 201X-XX-XX
+## Version 1.0
 
-- initial release
+### Added
+- Everything
