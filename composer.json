@@ -1,12 +1,12 @@
 {
     "name": "raadaapartners/raadaabase",
-    "description": ":package_description",
+    "description": "A package handling all common services by raadaa partners international limited and sister applications",
     "license": "MIT",
     "authors": [
         {
-            "name": "Author Name",
-            "email": "author@email.com",
-            "homepage": "http://author.com"
+            "name": "Lubem Tser",
+            "email": "lubem@raadaa.com",
+            "homepage": "https://raadaa.com"
         }
     ],
     "homepage": "https://github.com/raadaapartners/raadaabase",
