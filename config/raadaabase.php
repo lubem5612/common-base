@@ -18,9 +18,9 @@ return [
     ],
 
     'kuda' => [
-        'email'         => env('KUDA_EMAIL', 'enginlubem@ymail.com'),
+        'email'         => env('KUDA_EMAIL', ''),
         'base_url'      => env('KUDA_BASE_URL', 'https://kuda-openapi-uat.kudabank.com/v​2.1'),
-        'api_key'       => env('KUDA_API_KEY', 'THhY91SNUOImbZAKnX3e'),
+        'api_key'       => env('KUDA_API_KEY', ''),
         'webhook_url'   => env('KUDA_WEBHOOK_URL', ''),
     ],
 ];

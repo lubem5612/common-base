@@ -22,6 +22,11 @@ class BankList
 
     private function getBankList()
     {
-        return $this->processKuda(config('constants.bank_list'));
+        $callback = $this->processKuda(config('constants.bank_list'));
+        if ($callback['errors'])
+        {
+            return $this->errorResponse('error in fetching banks', $callback['errors']);
+        }
+        return $this->successResponse('banks fetched successfully', $callback['data']['data']['banks']);
     }
 }

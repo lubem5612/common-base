@@ -20,14 +20,13 @@ trait PostRequestHelper
     protected function generateAccessToken()
     {
         return Http::withHeaders([
+            'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'Cache-Control' => 'no-cache',
-        ])->withoutVerifying()->post(config('raadaabase.kuda.base_url').'/Account/GetToken',
-            [
-                'email' => config('raadaabase.kuda.email'),
-                'apiKey' => config('raadaabase.kuda.api_key')
-            ]
-        )->json();
+        ])->withoutVerifying()->post(config('raadaabase.kuda.base_url').'/Account/GetToken', [
+            "email" => config('raadaabase.kuda.email'),
+            "apiKey" => config('raadaabase.kuda.api_key')
+        ])->json();
     }
 
     /**
