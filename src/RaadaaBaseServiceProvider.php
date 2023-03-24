@@ -32,6 +32,7 @@ class RaadaabaseServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/raadaabase.php', 'raadaabase');
+        $this->mergeConfigFrom(__DIR__.'/../config/constants.php', 'constants');
 
         // Register the service the package provides.
         $this->app->singleton('raadaabase', function ($app) {
@@ -59,6 +60,7 @@ class RaadaabaseServiceProvider extends ServiceProvider
         // Publishing the configuration file.
         $this->publishes([
             __DIR__.'/../config/raadaabase.php' => config_path('raadaabase.php'),
+            __DIR__.'/../config/constants.php' => config_path('constants.php'),
         ], 'raadaabase.config');
 
         // Publishing the views.

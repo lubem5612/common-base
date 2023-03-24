@@ -1,9 +1,7 @@
 <?php
 
 
-namespace Raadaa\RaadaaBase\SMS;
-
-
+namespace Raadaapartners\Raadaabase\SMS;
 
 
 use Illuminate\Support\Facades\Http;
@@ -11,21 +9,23 @@ use Illuminate\Support\Facades\Log;
 use Raadaa\RaadaaBase\Helpers\ResponseHelper;
 use Raadaa\RaadaaBase\SMS\Helpers\PhoneHelper;
 
-class SmsService
+class SendChamp
 {
     use ResponseHelper;
 
-    private string $message;
+    private string $text;
     private string $sender_name;
     private array $numbers, $formattedNumbers;
     private string $route;
+    public string $public_key;
 
     public function __construct(array $numbers, string $message)
     {
-        $this->message = $message;
+        $this->text = $message;
         $this->numbers = $numbers;
         $this->route = config('raadaabase.sendchamp.route');
         $this->sender_name = config('raadaabase.sendchamp.username');
+        $this->public_key = config('raadaabase.sendchamp.public_key');
     }
 
     public function sendSMS()
@@ -34,13 +34,13 @@ class SmsService
             $this->processNumbers();
             $data = [
                 'to'            => $this->formattedNumbers,
-                'message'       => $this->message,
+                'message'       => $this->text,
                 'sender_name'   => $this->sender_name,
                 'route'         => $this->route,
             ];
             $url = 'https://api.sendchamp.com/api/v1/sms/send';
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.config('raadaabase.sendchamp.public_key'),
+                'Authorization' => 'Bearer '.$this->public_key,
                 'Content-Type' => 'application/json',
                 'Cache-Control' => 'no-cache',
             ])->withoutVerifying()->post($url, $data)->json();
@@ -64,4 +64,5 @@ class SmsService
                 array_push($this->formattedNumbers, $format['data']);
         }
     }
+
 }

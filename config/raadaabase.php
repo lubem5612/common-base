@@ -10,8 +10,18 @@ return [
         'public_key'    => env('SENDCHAMP_PUBLIC_KEY', ''),
     ],
 
+    'termii' => [
+        'username'      => env('TERMII_USERNAME', ''),
+        'message_type'  => env('TERMII_MESSAGE_TYPE', 'plain'),
+        'channel'       => env('TERMII_MESSAGE_CHANNEL', 'dnd'),
+        'api_key'       => env('TERMII_API_KEY', ''),
+    ],
+
     'kuda' => [
-        'webhook_url' => env('KUDA_WEBHOOK_URL', ''),
+        'email'         => env('KUDA_EMAIL', ''),
+        'base_url'      => env('KUDA_BASE_URL', ''),
+        'api_key'       => env('KUDA_API_KEY', ''),
+        'webhook_url'   => env('KUDA_WEBHOOK_URL', ''),
     ],
 
 ];

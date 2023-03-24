@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Raadaa\RaadaaBase\Helpers;
+namespace Raadaapartners\RaadaaBase\Helpers;
 
 
 trait ResponseHelper
