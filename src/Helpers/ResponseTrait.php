@@ -6,7 +6,7 @@ namespace Raadaapartners\Raadaabase\Helpers;
 
 use Illuminate\Support\Facades\Log;
 
-trait ResponseHelper
+trait ResponseTrait
 {
     protected $data = '';
     protected $message = '';

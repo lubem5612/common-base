@@ -8,14 +8,24 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Raadaapartners\RaadaaBase\Helpers\ResponseHelper;
 
 trait PostRequestHelper
 {
+
     /**
-     *
+     * @var null
      */
-    use ResponseHelper;
+    private $data = null;
+
+    /**
+     * @var string
+     */
+    private $message = "";
+
+    /**
+     * @var bool
+     */
+    private $success = false;
 
     /**
      * generate access token
@@ -74,7 +84,11 @@ trait PostRequestHelper
             Log::error($exception);
             $this->message = $exception->getMessage();
         }
-        return $this->buildResponse();
+        return [
+            "success" => $this->success,
+            "message" => $this->message,
+            "data" => $this->data,
+        ];
     }
 
     /**
