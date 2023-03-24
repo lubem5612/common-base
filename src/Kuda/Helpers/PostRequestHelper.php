@@ -13,21 +13,6 @@ trait PostRequestHelper
 {
 
     /**
-     * @var null
-     */
-    private $data = null;
-
-    /**
-     * @var string
-     */
-    private $message = "";
-
-    /**
-     * @var bool
-     */
-    private $success = false;
-
-    /**
      * generate access token
      *
      * @return mixed
