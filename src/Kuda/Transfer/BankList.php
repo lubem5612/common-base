@@ -22,6 +22,6 @@ class BankList
 
     private function getBankList()
     {
-        return $this->processKuda(config('raadaabase.constants.bank_list'));
+        return $this->processKuda(config('constants.bank_list'));
     }
 }

@@ -77,46 +77,12 @@ trait PostRequestHelper
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 'Cache-Control' => 'no-cache',
-            ])->withoutVerifying()->post(config('raadaabase.kuda.base_url'), $inputs)->json();
+            ])->withoutVerifying()->post(config('raadaabase.kuda.base_url').'/', $inputs)->json();
 
-            $this->processResponse($response);
+            return [ 'data' => $response, 'errors' => null, 'message' => 'api call successful' ];
         }catch (\Exception $exception) {
             Log::error($exception);
-            $this->message = $exception->getMessage();
-        }
-        return [
-            "success" => $this->success,
-            "message" => $this->message,
-            "data" => $this->data,
-        ];
-    }
-
-    /**
-     * process response from API
-     *
-     * @param $response
-     */
-    private function processResponse($response)
-    {
-        if (array_key_exists('Message', $response)) {
-            $this->message = $response["Message"];
-        }elseif(array_key_exists('message', $response)) {
-            $this->message = $response["message"];
-        }elseif (array_key_exists('Status', $response)) {
-            if ((string)$response['Status'] = "true") {
-                $this->success = true;
-            }
-        }elseif (array_key_exists('status', $response)) {
-            if ((string)$response['status'] = "true") {
-                $this->success = true;
-            }
-        }elseif (array_key_exists('Data', $response)) {
-            $this->data = $response["Data"];
-        }elseif (array_key_exists('data', $response)) {
-            $this->data = $response["data"];
-        }else {
-            $this->message = 'unknown response';
-            $this->data = $response;
+            return [ 'data' => null, 'errors' => $exception->getTrace(), 'message' => $exception->getMessage() ];
         }
     }
 
