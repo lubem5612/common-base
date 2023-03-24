@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Raadaapartners\RaadaaBase\Helpers;
+namespace Raadaapartners\Raadaabase\Helpers;
 
 
-trait ResponseHelper
+class ResponseHelper
 {
     public $data = '';
     public $message = '';
