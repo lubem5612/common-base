@@ -5,12 +5,12 @@ namespace Raadaapartners\Raadaabase\Kuda\Transfer;
 
 
 use Illuminate\Support\Facades\Log;
-use Raadaapartners\RaadaaBase\Helpers\ResponseHelper;
+use Raadaapartners\Raadaabase\Helpers\ResponseHelper;
 use Raadaapartners\Raadaabase\Kuda\Helpers\PostRequestHelper;
 
 class BankList
 {
-    use ResponseHelper, PostRequestHelper;
+    use PostRequestHelper, ResponseHelper;
 
     public function handle()
     {

@@ -4,7 +4,7 @@
 namespace Raadaapartners\Raadaabase\Helpers;
 
 
-class ResponseHelper
+trait ResponseHelper
 {
     public $data = '';
     public $message = '';
