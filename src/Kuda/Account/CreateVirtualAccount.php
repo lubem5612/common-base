@@ -35,9 +35,9 @@ class CreateVirtualAccount
 
     private function create()
     {
-        $this->input["trackingReference"] = $this->geneerateUniqueId();
+        $this->input["trackingReference"] = $this->generateUniqueId();
         $this->validateRequest($this->input, $this->rules);
-        return $this->processKuda(config('constants.create_virtual_account'), $this->input);
+        return $this->processKuda(config('raadaabase.constants.create_virtual_account'), $this->input);
     }
 
     private function makeRules() : self

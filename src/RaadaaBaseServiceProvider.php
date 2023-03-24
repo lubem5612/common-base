@@ -32,7 +32,6 @@ class RaadaabaseServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/raadaabase.php', 'raadaabase');
-        $this->mergeConfigFrom(__DIR__.'/../config/constants.php', 'constants');
 
         // Register the service the package provides.
         $this->app->singleton('raadaabase', function ($app) {

@@ -36,7 +36,7 @@ class MainAccountFundTransfer
     private function outwardTransfer()
     {
         $this->validateRequest($this->input, $this->rules);
-        return $this->processKuda(config('constants.single_fund_transfer'), $this->input);
+        return $this->processKuda(config('raadaabase.constants.single_fund_transfer'), $this->input);
     }
 
     private function makeRules() : self

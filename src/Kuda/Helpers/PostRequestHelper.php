@@ -106,7 +106,7 @@ trait PostRequestHelper
         }
     }
 
-    protected function geneerateUniqueId()
+    protected function generateUniqueId()
     {
         return '999'.rand(1000000, 9999999);
     }
