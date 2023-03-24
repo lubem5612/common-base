@@ -4,12 +4,12 @@
 namespace Raadaapartners\Raadaabase\Kuda\Transfer;
 
 
-use Raadaapartners\Raadaabase\Helpers\ResponseTrait;
+use Raadaapartners\Raadaabase\Helpers\ResponseHelper;
 use Raadaapartners\Raadaabase\Kuda\Helpers\PostRequestHelper;
 
 class BankList
 {
-    use PostRequestHelper, ResponseTrait;
+    use PostRequestHelper, ResponseHelper;
 
     public function handle()
     {

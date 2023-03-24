@@ -1253,12 +1253,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "42781fde669f255b7e2ca12ffdcd7ac8d95ee64f"
+                "reference": "c85b54601deeee1ec6393c9c3a74cd589614236c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/42781fde669f255b7e2ca12ffdcd7ac8d95ee64f",
-                "reference": "42781fde669f255b7e2ca12ffdcd7ac8d95ee64f",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/c85b54601deeee1ec6393c9c3a74cd589614236c",
+                "reference": "c85b54601deeee1ec6393c9c3a74cd589614236c",
                 "shasum": ""
             },
             "require": {
@@ -1294,7 +1294,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.4-dev"
+                    "dev-main": "2.5-dev"
                 }
             },
             "autoload": {
@@ -1351,7 +1351,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-25T17:11:27+00:00"
+            "time": "2023-03-24T15:36:23+00:00"
         },
         {
             "name": "league/config",

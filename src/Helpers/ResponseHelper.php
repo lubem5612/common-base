@@ -6,20 +6,8 @@ namespace Raadaapartners\Raadaabase\Helpers;
 
 use Illuminate\Support\Facades\Log;
 
-trait ResponseTrait
+trait ResponseHelper
 {
-    protected $data = '';
-    protected $message = '';
-    protected $success = false;
-
-    protected function buildResponse() : array
-    {
-        return [
-            "success"   => $this->success,
-            "data"      => $this->data,
-            "message"   => $this->message,
-        ];
-    }
 
     protected function successResponse($message, $data=null) : array
     {
