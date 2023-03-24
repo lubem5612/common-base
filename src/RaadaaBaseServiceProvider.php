@@ -60,7 +60,6 @@ class RaadaabaseServiceProvider extends ServiceProvider
         // Publishing the configuration file.
         $this->publishes([
             __DIR__.'/../config/raadaabase.php' => config_path('raadaabase.php'),
-            __DIR__.'/../config/constants.php' => config_path('constants.php'),
         ], 'raadaabase.config');
 
         // Publishing the views.
