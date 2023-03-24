@@ -6,9 +6,9 @@ namespace Raadaapartners\RaadaaBase\Helpers;
 
 trait ResponseHelper
 {
-    public $data = null;
-    public string $message = '';
-    public boolean $success = false;
+    public $data = '';
+    public $message = '';
+    public $success = false;
 
     public function buildResponse()
     {
