@@ -11,7 +11,9 @@ use Raadaapartners\Raadaabase\Kuda\Helpers\ValidationHelper;
 
 class CreateVirtualAccount
 {
-    use ResponseHelper, ValidationHelper, PostRequestHelper;
+    use ValidationHelper;
+    use PostRequestHelper;
+    use ResponseHelper;
 
     private array $input;
     private array $rules;
@@ -28,8 +30,7 @@ class CreateVirtualAccount
             return $this->create();
         }catch (\Exception $e) {
             Log::error($e);
-            $this->message = $e->getMessage();
-            return $this->buildResponse();
+            $this->serverErrorResponse($e);
         }
     }
 
@@ -37,7 +38,11 @@ class CreateVirtualAccount
     {
         $this->input["trackingReference"] = $this->generateUniqueId();
         $this->validateRequest($this->input, $this->rules);
-        return $this->processKuda(config('raadaabase.constants.create_virtual_account'), $this->input);
+        $callback = $this->processKuda(config('constants.create_virtual_account'), $this->input);
+        if ($callback['errors']) {
+            return $this->errorResponse('error in creating account', $callback['errors']);
+        }
+        return $this->successResponse('account created successfully', $callback['data']['data']);
     }
 
     private function makeRules() : self
