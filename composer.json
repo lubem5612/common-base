@@ -1,16 +1,20 @@
 {
     "name": "raadaapartners/raadaabase",
     "description": "A package handling all common services by raadaa partners international limited and sister applications",
+    "keywords": [
+        "raadaapartners",
+        "raadaabase"
+    ],
+    "homepage": "https://github.com/raadaapartners/raadaabase",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "Lubem Tser",
             "email": "lubem@raadaa.com",
-            "homepage": "https://raadaa.com"
+            "role": "Developer"
         }
     ],
-    "homepage": "https://github.com/raadaapartners/raadaabase",
-    "keywords": ["Laravel", "Raadaabase"],
     "require": {
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.5",
@@ -22,7 +26,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Raadaapartners\\Raadaabase\\": "src/"
+            "Raadaapartners\\Raadaabase\\": "src"
         }
     },
     "autoload-dev": {
@@ -30,13 +34,21 @@
             "Raadaapartners\\Raadaabase\\Tests\\": "tests"
         }
     },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
     "extra": {
         "laravel": {
             "providers": [
                 "Raadaapartners\\Raadaabase\\RaadaabaseServiceProvider"
             ],
             "aliases": {
-                "Raadaabase": "Raadaapartners\\Raadaabase\\Facades\\Raadaabase"
+                "Raadaabase": "Raadaapartners\\Raadaabase\\RaadaabaseFacade"
             }
         }
     },

@@ -7,77 +7,55 @@ use Illuminate\Support\ServiceProvider;
 class RaadaabaseServiceProvider extends ServiceProvider
 {
     /**
-     * Perform post-registration booting of services.
-     *
-     * @return void
+     * Bootstrap the application services.
      */
-    public function boot(): void
+    public function boot()
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'raadaapartners');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'raadaapartners');
+        /*
+         * Optional methods to load your package assets
+         */
+        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'raadaabase');
+        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'raadaabase');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
-        // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
-            $this->bootForConsole();
+            $this->publishes([
+                __DIR__ . '/../config/raadaabase.php' => config_path('raadaabase.php'),
+            ], 'config');
+
+            // Publishing the views.
+            /*$this->publishes([
+                __DIR__.'/../resources/views' => resource_path('views/vendor/raadaabase'),
+            ], 'views');*/
+
+            // Publishing assets.
+            /*$this->publishes([
+                __DIR__.'/../resources/assets' => public_path('vendor/raadaabase'),
+            ], 'assets');*/
+
+            // Publishing the translation files.
+            /*$this->publishes([
+                __DIR__.'/../resources/lang' => resource_path('lang/vendor/raadaabase'),
+            ], 'lang');*/
+
+            // Registering package commands.
+            // $this->commands([]);
         }
     }
 
     /**
-     * Register any package services.
-     *
-     * @return void
+     * Register the application services.
      */
-    public function register(): void
+    public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/raadaabase.php', 'raadaabase');
-        $this->mergeConfigFrom(__DIR__.'/../config/constants.php', 'constants');
+        // Automatically apply the package configuration
+        $this->mergeConfigFrom(__DIR__ . '/../config/raadaabase.php', 'raadaabase');
+        $this->mergeConfigFrom(__DIR__ . '/../config/constants.php', 'constants');
 
-        // Register the service the package provides.
-        $this->app->singleton('raadaabase', function ($app) {
+        // Register the main class to use with the facade
+        $this->app->singleton('raadaabase', function () {
             return new Raadaabase;
         });
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return ['raadaabase'];
-    }
-
-    /**
-     * Console-specific booting.
-     *
-     * @return void
-     */
-    protected function bootForConsole(): void
-    {
-        // Publishing the configuration file.
-        $this->publishes([
-            __DIR__.'/../config/raadaabase.php' => config_path('raadaabase.php'),
-        ], 'raadaabase.config');
-
-        // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/raadaapartners'),
-        ], 'raadaabase.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/raadaapartners'),
-        ], 'raadaabase.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/raadaapartners'),
-        ], 'raadaabase.views');*/
-
-        // Registering package commands.
-        // $this->commands([]);
     }
 }

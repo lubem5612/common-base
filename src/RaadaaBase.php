@@ -4,8 +4,5 @@ namespace Raadaapartners\Raadaabase;
 
 class Raadaabase
 {
-    public function __construct()
-    {
-
-    }
+    // Build your next great package.
 }
