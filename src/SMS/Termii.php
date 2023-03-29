@@ -1,9 +1,7 @@
 <?php
 
 
-namespace Raadaa\RaadaaBase\SMS;
-
-
+namespace Raadaapartners\Raadaabase\SMS;
 
 
 use Illuminate\Support\Facades\Http;

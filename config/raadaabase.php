@@ -21,6 +21,8 @@ return [
         'email'         => env('KUDA_EMAIL', ''),
         'base_url'      => env('KUDA_BASE_URL', 'https://kuda-openapi-uat.kudabank.com/v​2.1'),
         'api_key'       => env('KUDA_API_KEY', ''),
+        'acc_number'    => env('KUDA_ACCOUNT_NUMBER', ''),
+        'acc_name'      => env('KUDA_ACCOUNT_NAME', ''),
         'webhook_url'   => env('KUDA_WEBHOOK_URL', ''),
     ],
 ];

@@ -38,6 +38,8 @@ class MainAccountFundTransfer
         if ($this->validationFails) {
             return $this->validationErrors;
         }
+        $this->input["clientAccountNumber"] = config('raadaabase.kuda.acc_number');
+        $this->input["senderName"] = config('raadaabase.kuda.acc_name');
         $callback = $this->processKuda(config('constants.single_fund_transfer'), $this->input);
         if ($callback['errors']) {
             return $this->errorResponse('error in processing transfer', $callback['errors']);
@@ -48,7 +50,6 @@ class MainAccountFundTransfer
     private function makeRules() : self
     {
         $this->rules = [
-            "clientAccountNumber" => "required",
             "beneficiaryBankCode" => "required",
             "beneficiaryAccount" => "required",
             "beneficiaryName" => "required|string|max:100",
@@ -56,7 +57,6 @@ class MainAccountFundTransfer
             "narration" => "required|string|max:150",
             "nameEnquirySessionID" => "required",
             "trackingReference" => "required",
-            "senderName" => "required|string|max:100",
             "clientFeeCharge" => "nullable|numeric|gte:0"
         ];
         return $this;

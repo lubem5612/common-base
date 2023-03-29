@@ -35,7 +35,6 @@ class CreateVirtualAccount
 
     private function create()
     {
-        $this->input["trackingReference"] = $this->generateUniqueId();
         $this->validateRequest($this->input, $this->rules);
         if ($this->validationFails) {
             return $this->validationErrors;
@@ -50,6 +49,7 @@ class CreateVirtualAccount
     private function makeRules() : self
     {
         $this->rules = [
+            "trackingReference" => "required",
             "email" => "required|email",
             "phoneNumber" => "required|string|min:9|max:15",
             "lastName" => "required|string|max:50",
