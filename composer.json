@@ -1,0 +1,43 @@
+{
+    "name": "raadaapartners/commonbase",
+    "description": "A common package for accessing shared operations between raadaa and sister companies",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lubem Tser",
+            "email": "lubem@raadaa.com",
+            "homepage": "https://raadaa.com"
+        }
+    ],
+    "homepage": "https://github.com/raadaapartners/commonbase",
+    "keywords": ["Laravel", "CommonBase"],
+    "require": {
+        "illuminate/contracts": "7.* || ^8.15 || 9.0 - 9.34 || ^9.36 || ^10.0",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~7"
+    },
+    "autoload": {
+        "psr-4": {
+            "RaadaaPartners\\CommonBase\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RaadaaPartners\\CommonBase\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RaadaaPartners\\CommonBase\\CommonBaseServiceProvider"
+            ],
+            "aliases": {
+                "CommonBase": "RaadaaPartners\\CommonBase\\Facades\\CommonBase"
+            }
+        }
+    },
+    "minimum-stability": "dev"
+}
