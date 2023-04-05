@@ -12,7 +12,8 @@
     "homepage": "https://github.com/transave/commonbase",
     "keywords": ["Laravel", "CommonBase"],
     "require": {
-        "illuminate/support": "~9"
+        "illuminate/contracts": "7.* || ^8.15 || 9.0 - 9.34 || ^9.36 || ^10.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.0",
@@ -37,5 +38,6 @@
                 "CommonBase": "Transave\\CommonBase\\Facades\\CommonBase"
             }
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
