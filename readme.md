@@ -12,7 +12,7 @@ This is where your description should go. Take a look at [contributing.md](contr
 Via Composer
 
 ``` bash
-$ composer require raadaapartners/commonbase
+$ composer require transave/commonbase
 ```
 
 ## Usage
@@ -44,14 +44,14 @@ If you discover any security related issues, please email lubem@raadaa.com inste
 
 MIT. Please see the [license file](license.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/raadaapartners/commonbase.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/raadaapartners/commonbase.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/raadaapartners/commonbase/master.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/transave/commonbase.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/transave/commonbase.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/transave/commonbase/master.svg?style=flat-square
 [ico-styleci]: https://styleci.io/repos/12345678/shield
 
-[link-packagist]: https://packagist.org/packages/raadaapartners/commonbase
-[link-downloads]: https://packagist.org/packages/raadaapartners/commonbase
-[link-travis]: https://travis-ci.org/raadaapartners/commonbase
+[link-packagist]: https://packagist.org/packages/transave/commonbase
+[link-downloads]: https://packagist.org/packages/transave/commonbase
+[link-travis]: https://travis-ci.org/transave/commonbase
 [link-styleci]: https://styleci.io/repos/12345678
-[link-author]: https://github.com/raadaapartners
+[link-author]: https://github.com/transave
 [link-contributors]: ../../contributors

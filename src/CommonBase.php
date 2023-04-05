@@ -1,6 +1,6 @@
 <?php
 
-namespace RaadaaPartners\CommonBase;
+namespace Transave\CommonBase;
 
 class CommonBase
 {

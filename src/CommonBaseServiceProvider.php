@@ -1,6 +1,6 @@
 <?php
 
-namespace RaadaaPartners\CommonBase;
+namespace Transave\CommonBase;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -13,8 +13,8 @@ class CommonBaseServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'raadaapartners');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'raadaapartners');
+        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'transave');
+        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'transave');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
@@ -63,17 +63,17 @@ class CommonBaseServiceProvider extends ServiceProvider
 
         // Publishing the views.
         /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/raadaapartners'),
+            __DIR__.'/../resources/views' => base_path('resources/views/vendor/transave'),
         ], 'commonbase.views');*/
 
         // Publishing assets.
         /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/raadaapartners'),
+            __DIR__.'/../resources/assets' => public_path('vendor/transave'),
         ], 'commonbase.views');*/
 
         // Publishing the translation files.
         /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/raadaapartners'),
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/transave'),
         ], 'commonbase.views');*/
 
         // Registering package commands.

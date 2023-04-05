@@ -1,6 +1,6 @@
 <?php
 
-namespace RaadaaPartners\CommonBase\Facades;
+namespace Transave\CommonBase\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
