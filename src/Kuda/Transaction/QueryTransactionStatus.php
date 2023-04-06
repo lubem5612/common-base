@@ -1,16 +1,15 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Kuda\Transaction;
+namespace Transave\CommonBase\Kuda\Transaction;
 
 
-use Illuminate\Support\Facades\Log;
-use Raadaapartners\Raadaabase\Helpers\ManageResponse;
-use Raadaapartners\Raadaabase\Kuda\Helpers\PostRequestHelper;
+use Transave\CommonBase\Helpers\ManageResponse;
+use Transave\CommonBase\Kuda\Helpers\Api;
 
-class TransactionStatusQuery
+class QueryTransactionStatus
 {
-    use ManageResponse, PostRequestHelper;
+    use ManageResponse, Api;
 
     private string $transactionReference;
     private boolean $isThirdParty;
@@ -26,7 +25,7 @@ class TransactionStatusQuery
         try {
             return $this->checkTransactionStatus();
         }catch (\Exception $e) {
-           return $this->serverErrorResponse($e);
+            return $this->serverErrorResponse($e);
         }
     }
 

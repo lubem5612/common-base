@@ -1,16 +1,15 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Kuda\Account;
+namespace Transave\CommonBase\Kuda\Account;
 
 
-use Illuminate\Support\Facades\Log;
-use Raadaapartners\Raadaabase\Helpers\ManageResponse;
-use Raadaapartners\Raadaabase\Kuda\Helpers\PostRequestHelper;
+use Transave\CommonBase\Helpers\ManageResponse;
+use Transave\CommonBase\Kuda\Helpers\Api;
 
 class DisableVirtualAccount
 {
-    use ManageResponse, PostRequestHelper;
+    use ManageResponse, Api;
 
     private string $trackingReference;
 
@@ -24,7 +23,7 @@ class DisableVirtualAccount
         try {
             return $this->disableVirtualAccount();
         }catch (\Exception $e) {
-           return $this->serverErrorResponse($e);
+            return $this->serverErrorResponse($e);
         }
     }
 

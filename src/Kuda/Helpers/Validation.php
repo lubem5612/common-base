@@ -1,15 +1,15 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Kuda\Helpers;
+namespace Transave\CommonBase\Kuda\Helpers;
 
 
 use Illuminate\Support\Facades\Validator;
 
-trait ValidationHelper
+trait Validation
 {
-    public $validationFails = false;
-    public $validationErrors = [];
+    protected $validationFails = false;
+    protected $validationErrors = [];
 
     public function validateRequest(array $data, array $rules)
     {

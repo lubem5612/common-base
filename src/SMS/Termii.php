@@ -1,17 +1,18 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\SMS;
+namespace Transave\CommonBase\SMS;
 
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Raadaa\RaadaaBase\SMS\Helpers\PhoneHelper;
-use Raadaapartners\Raadaabase\SMS\Helpers\ResponseTrait;
+use Transave\CommonBase\Helpers\ManagePhone;
+use Transave\CommonBase\SMS\Helper\ResponseTrait;
+
 
 class Termii
 {
-    use ResponseTrait;
+    use ResponseTrait, ManagePhone;
 
     private string $text;
     private string $sender_name;
@@ -24,19 +25,18 @@ class Termii
     {
         $this->text = $message;
         $this->number = $number;
-        $this->channel = config('raadaabase.termii.channel');
-        $this->sender_name = config('raadaabase.termii.username');
-        $this->api_key = config('raadaabase.termii.api_key');
-        $this->message_type = config('raadaabase.termii.message_type');
+        $this->channel = config('commonbase.termii.channel');
+        $this->sender_name = config('commonbase.termii.username');
+        $this->api_key = config('commonbase.termii.api_key');
+        $this->message_type = config('commonbase.termii.message_type');
     }
 
     public function sendSMS()
     {
         try {
             $url = "https://api.ng.termii.com/api/sms/send";
-            $recipient = (new PhoneHelper($this->number))->handle();
             $data = [
-                'to' => $recipient,
+                'to' => $this->formatNumber($this->number),
                 'from' => $this->sender_name,
                 'sms' => $this->text,
                 'type' => $this->message_type,

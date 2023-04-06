@@ -1,19 +1,16 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Kuda\Account;
+namespace Transave\CommonBase\Kuda\Account;
 
 
-use Illuminate\Support\Facades\Log;
-use Raadaapartners\Raadaabase\Helpers\ManageResponse;
-use Raadaapartners\Raadaabase\Kuda\Helpers\PostRequestHelper;
-use Raadaapartners\Raadaabase\Kuda\Helpers\ValidationHelper;
+use Transave\CommonBase\Helpers\ManageResponse;
+use Transave\CommonBase\Kuda\Helpers\Api;
+use Transave\CommonBase\Kuda\Helpers\Validation;
 
 class CreateVirtualAccount
 {
-    use PostRequestHelper;
-    use ManageResponse;
-    use ValidationHelper;
+    use Api, Validation, ManageResponse;
 
     private array $input;
     private array $rules;

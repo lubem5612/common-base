@@ -1,18 +1,16 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Kuda\Transfer;
+namespace Transave\CommonBase\Kuda\Transfer;
 
 
-use Illuminate\Support\Facades\Log;
-use Raadaapartners\Raadaabase\Helpers\ManageResponse;
-use Raadaapartners\RaadaaBase\Helpers\ResponseHelper;
-use Raadaapartners\Raadaabase\Kuda\Helpers\PostRequestHelper;
-use Raadaapartners\Raadaabase\Kuda\Helpers\ValidationHelper;
+use Transave\CommonBase\Helpers\ManageResponse;
+use Transave\CommonBase\Kuda\Helpers\Api;
+use Transave\CommonBase\Kuda\Helpers\Validation;
 
 class MainAccountFundTransfer
 {
-    use ManageResponse, ValidationHelper, PostRequestHelper;
+    use ManageResponse, Validation, Api;
 
     private array $input;
     private array $rules;
@@ -38,8 +36,8 @@ class MainAccountFundTransfer
         if ($this->validationFails) {
             return $this->validationErrors;
         }
-        $this->input["clientAccountNumber"] = config('raadaabase.kuda.acc_number');
-        $this->input["senderName"] = config('raadaabase.kuda.acc_name');
+        $this->input["clientAccountNumber"] = config('commonbase.kuda.acc_number');
+        $this->input["senderName"] = config('commonbase.kuda.acc_name');
         $callback = $this->processKuda(config('constants.single_fund_transfer'), $this->input);
         if ($callback['errors']) {
             return $this->errorResponse('error in processing transfer', $callback['errors']);

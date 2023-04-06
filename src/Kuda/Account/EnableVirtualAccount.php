@@ -1,15 +1,15 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Kuda\Account;
+namespace Transave\CommonBase\Kuda\Account;
 
 
-use Raadaapartners\Raadaabase\Helpers\ManageResponse;
-use Raadaapartners\Raadaabase\Kuda\Helpers\PostRequestHelper;
+use Transave\CommonBase\Helpers\ManageResponse;
+use Transave\CommonBase\Kuda\Helpers\Api;
 
 class EnableVirtualAccount
 {
-    use ManageResponse, PostRequestHelper;
+    use ManageResponse, Api;
 
     private string $trackingReference;
 

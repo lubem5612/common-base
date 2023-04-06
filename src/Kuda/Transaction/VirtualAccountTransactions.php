@@ -1,15 +1,15 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Kuda\Transaction;
+namespace Transave\CommonBase\Kuda\Transaction;
 
 
-use Raadaapartners\Raadaabase\Helpers\ManageResponse;
-use Raadaapartners\Raadaabase\Kuda\Helpers\PostRequestHelper;
+use Transave\CommonBase\Helpers\ManageResponse;
+use Transave\CommonBase\Kuda\Helpers\Api;
 
 class VirtualAccountTransactions
 {
-    use ManageResponse, PostRequestHelper;
+    use ManageResponse, Api;
 
     private $page_size;
     private $page_number;
