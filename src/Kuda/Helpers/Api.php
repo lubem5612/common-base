@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Kuda\Helpers;
+namespace Transave\CommonBase\Kuda\Helpers;
 
 
 use Carbon\Carbon;
@@ -9,9 +9,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-trait PostRequestHelper
+trait Api
 {
-
     /**
      * generate access token
      *
@@ -23,9 +22,9 @@ trait PostRequestHelper
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'Cache-Control' => 'no-cache',
-        ])->withoutVerifying()->post(config('raadaabase.kuda.base_url').'/Account/GetToken', [
-            "email" => config('raadaabase.kuda.email'),
-            "apiKey" => config('raadaabase.kuda.api_key')
+        ])->withoutVerifying()->post(config('commonbase.kuda.base_url').'/Account/GetToken', [
+            "email" => config('commonbase.kuda.email'),
+            "apiKey" => config('commonbase.kuda.api_key')
         ])->json();
     }
 
@@ -61,7 +60,7 @@ trait PostRequestHelper
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 'Cache-Control' => 'no-cache',
-            ])->withoutVerifying()->post(config('raadaabase.kuda.base_url').'/', $inputs)->json();
+            ])->withoutVerifying()->post(config('commonbase.kuda.base_url').'/', $inputs)->json();
 
             return [ 'data' => $response, 'errors' => null, 'message' => 'api call successful' ];
         }catch (\Exception $exception) {

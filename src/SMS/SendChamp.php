@@ -1,17 +1,18 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\SMS;
+namespace Transave\CommonBase\SMS;
 
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Raadaa\RaadaaBase\SMS\Helpers\PhoneHelper;
-use Raadaapartners\Raadaabase\SMS\Helpers\ResponseTrait;
+use Transave\CommonBase\Helpers\ManagePhone;
+use Transave\CommonBase\SMS\Helper\ResponseTrait;
+
 
 class SendChamp
 {
-    use ResponseTrait;
+    use ResponseTrait, ManagePhone;
 
     private string $text;
     private string $sender_name;
@@ -23,9 +24,9 @@ class SendChamp
     {
         $this->text = $message;
         $this->numbers = $numbers;
-        $this->route = config('raadaabase.sendchamp.route');
-        $this->sender_name = config('raadaabase.sendchamp.username');
-        $this->public_key = config('raadaabase.sendchamp.public_key');
+        $this->route = config('commonbase.sendchamp.route');
+        $this->sender_name = config('commonbase.sendchamp.username');
+        $this->public_key = config('commonbase.sendchamp.public_key');
     }
 
     public function sendSMS()
@@ -59,10 +60,8 @@ class SendChamp
     private function processNumbers()
     {
         foreach ($this->numbers as $number) {
-            $format = (new PhoneHelper($number))->handle();
-            if ($format['success'])
-                array_push($this->formattedNumbers, $format['data']);
+            $format = $this->formatNumber($number);
+            array_push($this->formattedNumbers, $format);
         }
     }
-
 }

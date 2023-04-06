@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Helpers;
+namespace Transave\CommonBase\Helpers;
 
 
 use Illuminate\Support\Facades\Log;

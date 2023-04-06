@@ -25,4 +25,11 @@ return [
         'acc_name'      => env('KUDA_ACCOUNT_NAME', ''),
         'webhook_url'   => env('KUDA_WEBHOOK_URL', ''),
     ],
+
+    'paystack' => [
+        'secret_key'    => env('PAYSTACK_SECRET_KEY', ''),
+        'public_key'    => env('PAYSTACK_PUBLIC_KEY', ''),
+        'callback_url'  => env('PAYSTACK_CALLBACK_URL', ''),
+        'base_url'      => env('PAYSTACK_BASE_URL', ''),
+    ]
 ];

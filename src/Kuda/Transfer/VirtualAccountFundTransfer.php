@@ -1,18 +1,16 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Kuda\Transfer;
+namespace Transave\CommonBase\Kuda\Transfer;
 
 
-use Illuminate\Support\Facades\Log;
-use Raadaapartners\Raadaabase\Helpers\ManageResponse;
-use Raadaapartners\RaadaaBase\Helpers\ResponseHelper;
-use Raadaapartners\Raadaabase\Kuda\Helpers\PostRequestHelper;
-use Raadaapartners\Raadaabase\Kuda\Helpers\ValidationHelper;
+use Transave\CommonBase\Helpers\ManageResponse;
+use Transave\CommonBase\Kuda\Helpers\Api;
+use Transave\CommonBase\Kuda\Helpers\Validation;
 
 class VirtualAccountFundTransfer
 {
-    use ManageResponse, ValidationHelper, PostRequestHelper;
+    use ManageResponse, Validation, Api;
 
     private array $input;
     private array $rules;

@@ -1,16 +1,16 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\SMS\Helpers;
+namespace Transave\CommonBase\SMS\Helper;
 
 
 trait ResponseTrait
 {
-    public $data = [];
-    public $message = "";
-    public $success = true;
+    protected $data = [];
+    protected $message = "";
+    protected $success = true;
 
-    public function buildResponse()
+    protected function buildResponse()
     {
         return [
             "data"      => $this->data,

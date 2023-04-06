@@ -1,29 +1,27 @@
 <?php
 
-namespace Raadaapartners\Raadaabase;
+namespace Transave\CommonBase;
 
-use Raadaapartners\Raadaabase\Kuda\Account\CreateVirtualAccount;
-use Raadaapartners\Raadaabase\Kuda\Account\DisableVirtualAccount;
-use Raadaapartners\Raadaabase\Kuda\Account\EnableVirtualAccount;
-use Raadaapartners\Raadaabase\Kuda\Account\GetVirtualAccount;
-use Raadaapartners\Raadaabase\Kuda\Account\ListVirtualAccounts;
-use Raadaapartners\Raadaabase\Kuda\Account\MainBalanceCheck;
-use Raadaapartners\Raadaabase\Kuda\Account\UpdateVirtualAccount;
-use Raadaapartners\Raadaabase\Kuda\Account\VirtualBalanceCheck;
-use Raadaapartners\Raadaabase\Kuda\Transaction\MainAccountTransactions;
-use Raadaapartners\Raadaabase\Kuda\Transaction\TransactionStatusQuery;
-use Raadaapartners\Raadaabase\Kuda\Transaction\VirtualAccountTransactions;
-use Raadaapartners\Raadaabase\Kuda\Transfer\BankList;
-use Raadaapartners\Raadaabase\Kuda\Transfer\MainAccountFundTransfer;
-use Raadaapartners\Raadaabase\Kuda\Transfer\NameEnquiry;
-use Raadaapartners\Raadaabase\Kuda\Transfer\VirtualAccountFundTransfer;
-use Raadaapartners\Raadaabase\SMS\SendChamp;
-use Raadaapartners\Raadaabase\SMS\Termii;
+use Transave\CommonBase\Kuda\Account\CreateVirtualAccount;
+use Transave\CommonBase\Kuda\Account\DisableVirtualAccount;
+use Transave\CommonBase\Kuda\Account\EnableVirtualAccount;
+use Transave\CommonBase\Kuda\Account\GetVirtualAccount;
+use Transave\CommonBase\Kuda\Account\ListVirtualAccounts;
+use Transave\CommonBase\Kuda\Account\MainAccountBalance;
+use Transave\CommonBase\Kuda\Account\UpdateVirtualAccount;
+use Transave\CommonBase\Kuda\Account\VirtualAccountBalance;
+use Transave\CommonBase\Kuda\Transaction\MainAccountTransactions;
+use Transave\CommonBase\Kuda\Transaction\QueryTransactionStatus;
+use Transave\CommonBase\Kuda\Transaction\VirtualAccountTransactions;
+use Transave\CommonBase\Kuda\Transfer\BankList;
+use Transave\CommonBase\Kuda\Transfer\MainAccountFundTransfer;
+use Transave\CommonBase\Kuda\Transfer\NameEnquiry;
+use Transave\CommonBase\Kuda\Transfer\VirtualAccountFundTransfer;
+use Transave\CommonBase\SMS\SendChamp;
+use Transave\CommonBase\SMS\Termii;
 
-class Raadaabase
+class CommonBase
 {
-    private $result;
-
     public function createVirtualAccount(array $data)
     {
         return (new CreateVirtualAccount($data))->handle();
@@ -56,12 +54,12 @@ class Raadaabase
 
     public function getMainAccountBalance()
     {
-        return (new MainBalanceCheck())->handle();
+        return (new MainAccountBalance())->handle();
     }
 
     public function getVirtualAccountBalance(string $trackingReference)
     {
-        return (new VirtualBalanceCheck($trackingReference))->handle();
+        return (new VirtualAccountBalance($trackingReference))->handle();
     }
 
     public function getBankList()
@@ -96,7 +94,7 @@ class Raadaabase
 
     public function checkTransactionStatus($transactionReference, $isThirdParty)
     {
-        return (new TransactionStatusQuery($transactionReference, $isThirdParty))->handle();
+        return (new QueryTransactionStatus($transactionReference, $isThirdParty))->handle();
     }
 
     public function sendWithTermii($number, $message)

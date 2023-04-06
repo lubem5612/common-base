@@ -1,22 +1,22 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Kuda\Transfer;
+namespace Transave\CommonBase\Kuda\Transfer;
 
 
-use Raadaapartners\Raadaabase\Helpers\ManageResponse;
-use Raadaapartners\Raadaabase\Kuda\Helpers\PostRequestHelper;
+use Transave\CommonBase\Helpers\ManageResponse;
+use Transave\CommonBase\Kuda\Helpers\Api;
 
 class BankList
 {
-    use PostRequestHelper, ManageResponse;
+    use Api, ManageResponse;
 
     public function handle()
     {
         try {
             return $this->getBankList();
         }catch (\Exception $e) {
-           return $this->serverErrorResponse($e);
+            return $this->serverErrorResponse($e);
         }
     }
 
