@@ -32,9 +32,13 @@ class CommonBaseServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/commonbase.php', 'commonbase');
+        $this->mergeConfigFrom(__DIR__.'/../config/constants.php', 'constants');
 
         // Register the service the package provides.
         $this->app->singleton('commonbase', function ($app) {
+            return new CommonBase;
+        });
+        $this->app->bind('commonbase', function($app) {
             return new CommonBase;
         });
     }
