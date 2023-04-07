@@ -64,7 +64,7 @@ class CommonBaseServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/commonbase.php' => config_path('commonbase.php'),
             __DIR__.'/../config/filesystems.php.php' => config_path('filesystems.php'),
-        ]);
+        ], 'commonbase.config');
 
         // Publishing the views.
         /*$this->publishes([
