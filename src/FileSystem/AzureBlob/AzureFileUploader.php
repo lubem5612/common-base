@@ -19,13 +19,13 @@ class AzureFileUploader
     private string $full_url;
     private string $relative_path;
 
-    public function __construct(UploadedFile $file=null, string $folder=null, string $full_url=null, Model $model=null, string $model_column=null)
+    public function __construct(UploadedFile $file=null, string $folder=null, Model $model=null, string $model_column=null)
     {
         $this->file         = $file;
         $this->folder       = $folder;
-        $this->full_url     = $full_url;
         $this->model        = $model;
         $this->model_column = $model_column;
+        $this->setRelativeUrlFromModel();
     }
 
     public function upload()
@@ -72,7 +72,7 @@ class AzureFileUploader
     public function delete()
     {
         try{
-            if (is_null($this->full_url) || empty($this->full_url)) {
+            if (!$this->full_url || is_null($this->full_url)) {
                 return $this->buildResponse('file path not found');
             }
             if(strpos($this->full_url, 'windows.net')) {
@@ -106,5 +106,21 @@ class AzureFileUploader
             "message" => $message
         ];
     }
+
+    private function setRelativeUrlFromModel()
+    {
+        $file_path = $this->model_column;
+
+        if (is_null($this->model) || empty($this->model)) {
+            $this->full_url = null;
+        }elseif (property_exists($this->model, $this->model_column)) {
+            $this->full_url = $this->model->$file_path;
+        }elseif (isset($this->model)){
+            $this->full_url = $this->model->$file_path;
+        }else {
+            $this->full_url = null;
+        }
+    }
+
 
 }
