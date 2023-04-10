@@ -37,9 +37,9 @@ class AzureFileUploader
             $path = $this->file->storePubliclyAs($this->folder, $filename, 'azure');
             if ($path) {
                 if (env('AZURE_STORAGE_PREFIX')) {
-                    $data = config('app.storage_url').env('AZURE_STORAGE_PREFIX').'/'.$path;
+                    $data = config('commonbase.azure.storage_url').env('AZURE_STORAGE_PREFIX').'/'.$path;
                 }else {
-                    $data = config('app.storage_url').$path;
+                    $data = config('commonbase.azure.storage_url').$path;
                 }
                 return $this->buildResponse('upload successful', true, $data);
             }
