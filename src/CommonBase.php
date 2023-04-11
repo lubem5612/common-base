@@ -2,6 +2,7 @@
 
 namespace Transave\CommonBase;
 
+use Transave\CommonBase\FileSystem\AzureBlob\AzureFileUploader;
 use Transave\CommonBase\Kuda\Account\CreateVirtualAccount;
 use Transave\CommonBase\Kuda\Account\DisableVirtualAccount;
 use Transave\CommonBase\Kuda\Account\EnableVirtualAccount;
@@ -106,4 +107,5 @@ class CommonBase
     {
         return (new SendChamp($numbers, $message))->sendSMS();
     }
+
 }
