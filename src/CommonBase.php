@@ -2,7 +2,10 @@
 
 namespace Transave\CommonBase;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
 use Transave\CommonBase\FileSystem\AzureBlob\AzureFileUploader;
+use Transave\CommonBase\FileSystem\AzureBlob\FileManager;
 use Transave\CommonBase\Kuda\Account\CreateVirtualAccount;
 use Transave\CommonBase\Kuda\Account\DisableVirtualAccount;
 use Transave\CommonBase\Kuda\Account\EnableVirtualAccount;
@@ -106,6 +109,21 @@ class CommonBase
     public function sendWithSendChamp(array $numbers, string $message)
     {
         return (new SendChamp($numbers, $message))->sendSMS();
+    }
+
+    public function uploadFile(UploadedFile $file, string $folder)
+    {
+        return FileManager::UploadFile($file, $folder);
+    }
+
+    public function replaceOrReplaceFile(UploadedFile $file, string $folder, $model, string $column)
+    {
+        return FileManager::UploadOrReplaceFile($file, $folder, $model, $column);
+    }
+
+    public function deleteFile(string $fileUrl)
+    {
+        return FileManager::DeleteFile($fileUrl);
     }
 
 }
