@@ -1,12 +1,19 @@
 <?php
 
 
-namespace Raadaapartners\Raadaabase\Tests;
-use Raadaapartners\Raadaabase\RaadaabaseServiceProvider;
+namespace Transave\CommonBase\Tests;
 
 
-class TestCase extends \Orchestra\Testbench\TestCase
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\SanctumServiceProvider;
+use Orchestra\Testbench\TestCase as BaseTestCase;
+use Transave\CommonBase\CommonBaseServiceProvider;
+
+class TestCase extends BaseTestCase
 {
+
+    use RefreshDatabase;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -16,12 +23,13 @@ class TestCase extends \Orchestra\Testbench\TestCase
     protected function getPackageProviders($app)
     {
         return [
-            RaadaabaseServiceProvider::class;
+            CommonBaseServiceProvider::class,
+            SanctumServiceProvider::class,
         ];
     }
 
-    protected function getEnvironmentSetUp($app)
+    protected function defineDatabaseMigrations()
     {
-        // perform environment setup
+        $this->loadMigrationsFrom(__DIR__.'../database/migrations');
     }
 }

@@ -2,55 +2,54 @@
 
 namespace Transave\CommonBase;
 
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Transave\CommonBase\Console\Seeder;
+use Transave\CommonBase\Http\Models\User;
 
 class CommonBaseServiceProvider extends ServiceProvider
 {
-    /**
-     * Perform post-registration booting of services.
-     *
-     * @return void
-     */
-    public function boot(): void
-    {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'transave');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'transave');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
-
-        // Publishing is only necessary when using the CLI.
-        if ($this->app->runningInConsole()) {
-            $this->bootForConsole();
-        }
-    }
 
     /**
      * Register any package services.
      *
      * @return void
      */
-    public function register(): void
+    public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/commonbase.php', 'commonbase');
-        $this->mergeConfigFrom(__DIR__.'/../config/constants.php', 'constants');
+        // Automatically apply the package configuration
+        $this->mergeConfigFrom(__DIR__ . '/../config/commonbase.php', 'commonbase');
+        $this->mergeConfigFrom(__DIR__ . '/../config/endpoints.php', 'endpoints');
+        $this->mergeConfigFrom(__DIR__ . '/../config/constants.php', 'constants');
 
         // Register the service the package provides.
         $this->app->singleton('commonbase', function ($app) {
             return new CommonBase;
         });
+        //
         $this->app->bind('commonbase', function($app) {
             return new CommonBase;
         });
     }
 
     /**
-     * Get the services provided by the provider.
-     *
-     * @return array
+     * Bootstrap the application services.
      */
-    public function provides()
+    public function boot()
     {
-        return ['commonbase'];
+        /*
+         * Optional methods to load your package assets
+         */
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'commonbase');
+        $this->loadMigrationsFrom(__DIR__. '/../database/migrations');
+        $this->registerRoutes();
+
+        if ($this->app->runningInConsole()) {
+            $this->bootForConsole();
+        }
+
+        $this->defineDefaultConfig();
     }
 
     /**
@@ -58,29 +57,84 @@ class CommonBaseServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function bootForConsole(): void
+    protected function bootForConsole()
     {
-        // Publishing the configuration file.
         $this->publishes([
-            __DIR__.'/../config/commonbase.php' => config_path('commonbase.php')
-        ], 'commonbase.config');
+            __DIR__ . '/../config/commonbase.php' => config_path('commonbase.php'),
+        ], 'commbase-config');
+
+        // Publishing migrations
+        $this->publishes([
+            __DIR__.'/../database/migrations' => database_path('migrations'),
+        ], 'commonbase-migrations');
 
         // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/transave'),
-        ], 'commonbase.views');*/
+        $this->publishes([
+            __DIR__.'/../resources/views' => resource_path('views/vendor/commonbase'),
+        ], 'views');
 
         // Publishing assets.
-        /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/transave'),
-        ], 'commonbase.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/transave'),
-        ], 'commonbase.views');*/
+        $this->publishes([
+            __DIR__.'/../resources/assets' => public_path('vendor/commonbase'),
+        ], 'assets');
 
         // Registering package commands.
-        // $this->commands([]);
+        $this->commands([
+            Seeder::class
+        ]);
     }
+
+    protected function registerRoutes()
+    {
+        Route::group($this->routeConfiguration(), function () {
+            $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+        });
+    }
+
+    protected function defineDefaultConfig()
+    {
+        Config::set('auth.defaults', [
+            'guard'     => 'api',
+            'passwords' => 'users',
+        ]);
+
+        Config::set('auth.guards.api', [
+            'driver'    => 'session',
+            'provider'  => 'users',
+            'hash'      => false,
+        ]);
+
+        Config::set('auth.providers.users', [
+            'driver'    => 'eloquent',
+            'model'     => User::class,
+        ]);
+
+        Config::set('filesystems.disks.azure', [
+            'driver'            => 'azure',
+            'local_address'     => env('AZURE_STORAGE_LOCAL_ADDRESS', 'local'),
+            'name'              => env('AZURE_STORAGE_NAME', 'raadaastorage'),
+            'key'               => env('AZURE_STORAGE_KEY', ''),
+            'container'         => env('AZURE_STORAGE_CONTAINER', "raadaatesting"),
+            'prefix'            => env('AZURE_STORAGE_PREFIX', "transave"),
+            'url'               => env('AZURE_STORAGE_URL', null),
+        ]);
+    }
+
+    /**
+     * Get the services provided by the provider.
+     * @return array
+     */
+    public function provides()
+    {
+        return ['commonbase'];
+    }
+
+    protected function routeConfiguration()
+    {
+        return [
+            'prefix'        => config('commonbase.route.prefix'),
+            'middleware'    => config('commonbase.route.middleware'),
+        ];
+    }
+
 }

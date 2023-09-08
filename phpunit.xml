@@ -1,22 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="vendor/autoload.php"
-         backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         verbose="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false">
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        bootstrap="vendor/autoload.php"
+        backupGlobals="false"
+        backupStaticAttributes="false"
+        colors="true"
+        verbose="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        processIsolation="false"
+        stopOnFailure="false"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+>
+    <coverage>
+        <include>
+            <directory suffix=".php">src/</directory>
+        </include>
+    </coverage>
     <testsuites>
-        <testsuite name="Package">
-            <directory suffix=".php">./tests/</directory>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist>
-            <directory>src/</directory>
-        </whitelist>
-    </filter>
+    <php>
+        <env name="DB_CONNECTION" value="testing"/>
+        <env name="APP_KEY" value="base64:2fl+Ktvkfl+Fuz4Qp/A75G2RTiWVA/ZoKZvp6fiiM10="/>
+
+        <env name="KUDA_EMAIL" value="ezugwuchigozie1@gmail.com"/>
+        <env name="KUDA_API_KEY" value="OZwjKEV0afPslyg7MHrF"/>
+        <env name="KUDA_BASE_URL" value="https://kuda-openapi-uat.kudabank.com/v2.1"/>
+        <env name="KUDA_ACCOUNT_NUMBER" value="3000592524"/>
+        <env name="KUDA_ACCOUNT_NAME" value="TranSave Technologies LTD"/>
+        <env name="KUDA_PHONE_NUMBER" value="08037395286"/>
+
+        <!--        <env name="KUDA_EMAIL" value="enginlubem@ymail.com"/>-->
+        <!--        <env name="KUDA_API_KEY" value="Urf8wjdamiB5TMuEqOoQ"/>-->
+        <!--        <env name="KUDA_BASE_URL" value="https://kuda-openapi-uat.kudabank.com/v2.1"/>-->
+        <!--        <env name="KUDA_ACCOUNT_NUMBER" value="3000129618"/>-->
+        <!--        <env name="KUDA_ACCOUNT_NAME" value="LUBEM TSER"/>-->
+        <!--        <env name="KUDA_PHONE_NUMBER" value="2348038602189"/>-->
+
+        <env name="TERMII_USERNAME" value="N-Alert"/>
+        <env name="TERMII_MESSAGE_TYPE" value="plain"/>
+        <env name="TERMII_MESSAGE_CHANNEL" value="dnd"/>
+        <env name="TERMII_API_KEY" value="TLL2v64Wj9XE360cVVDK7gHhLTfg1GSsX6SMEvV0J1zybJyAhK1BcRq5Ymsh87"/>
+
+    </php>
 </phpunit>
