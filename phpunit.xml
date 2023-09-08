@@ -30,19 +30,19 @@
         <env name="DB_CONNECTION" value="testing"/>
         <env name="APP_KEY" value="base64:2fl+Ktvkfl+Fuz4Qp/A75G2RTiWVA/ZoKZvp6fiiM10="/>
 
-        <env name="KUDA_EMAIL" value="ezugwuchigozie1@gmail.com"/>
-        <env name="KUDA_API_KEY" value="OZwjKEV0afPslyg7MHrF"/>
-        <env name="KUDA_BASE_URL" value="https://kuda-openapi-uat.kudabank.com/v2.1"/>
-        <env name="KUDA_ACCOUNT_NUMBER" value="3000592524"/>
-        <env name="KUDA_ACCOUNT_NAME" value="TranSave Technologies LTD"/>
-        <env name="KUDA_PHONE_NUMBER" value="08037395286"/>
-
-        <!--        <env name="KUDA_EMAIL" value="enginlubem@ymail.com"/>-->
-        <!--        <env name="KUDA_API_KEY" value="Urf8wjdamiB5TMuEqOoQ"/>-->
+        <!--        <env name="KUDA_EMAIL" value="ezugwuchigozie1@gmail.com"/>-->
+        <!--        <env name="KUDA_API_KEY" value="OZwjKEV0afPslyg7MHrF"/>-->
         <!--        <env name="KUDA_BASE_URL" value="https://kuda-openapi-uat.kudabank.com/v2.1"/>-->
-        <!--        <env name="KUDA_ACCOUNT_NUMBER" value="3000129618"/>-->
-        <!--        <env name="KUDA_ACCOUNT_NAME" value="LUBEM TSER"/>-->
-        <!--        <env name="KUDA_PHONE_NUMBER" value="2348038602189"/>-->
+        <!--        <env name="KUDA_ACCOUNT_NUMBER" value="3000592524"/>-->
+        <!--        <env name="KUDA_ACCOUNT_NAME" value="TranSave Technologies LTD"/>-->
+        <!--        <env name="KUDA_PHONE_NUMBER" value="08037395286"/>-->
+
+        <env name="KUDA_EMAIL" value="enginlubem@ymail.com"/>
+        <env name="KUDA_API_KEY" value="Urf8wjdamiB5TMuEqOoQ"/>
+        <env name="KUDA_BASE_URL" value="https://kuda-openapi-uat.kudabank.com/v2.1"/>
+        <env name="KUDA_ACCOUNT_NUMBER" value="3000129618"/>
+        <env name="KUDA_ACCOUNT_NAME" value="LUBEM TSER"/>
+        <env name="KUDA_PHONE_NUMBER" value="2348038602189"/>
 
         <env name="TERMII_USERNAME" value="N-Alert"/>
         <env name="TERMII_MESSAGE_TYPE" value="plain"/>

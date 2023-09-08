@@ -34,5 +34,6 @@ class UserTableSeeder
                 'password' => bcrypt('password')
             ]);
         }
+
     }
 }

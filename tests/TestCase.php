@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\SanctumServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Transave\CommonBase\CommonBaseServiceProvider;
+use Transave\CommonBase\Database\Seeders\KudaAccountSeeder;
 
 class TestCase extends BaseTestCase
 {
@@ -18,6 +19,7 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
         // additional setup
+        (new KudaAccountSeeder())->run();
     }
 
     protected function getPackageProviders($app)

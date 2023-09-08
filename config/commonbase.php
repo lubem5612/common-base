@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'app_env'           => env('APP_ENV', 'testing'),
     'sendchamp' => [
         'username'      => env('SENDCHAMP_USERNAME', 'Sendchamp'),
         'route'         => env('SENDCHAMP_ROUTE', 'dnd'),

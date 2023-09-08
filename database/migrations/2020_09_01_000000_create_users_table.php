@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('phone', 20)->unique();
             $table->string('bvn', 11)->nullable();
             $table->string('account_number', 11)->nullable()->unique();
-            $table->decimal('withdrawal_limit', 11, 2)->default(0);
+            $table->decimal('withdrawal_limit', 10, 8)->default(0);
             $table->string('role', 30)->default('customer')->index();
             $table->string('verification_token')->nullable()->index();
             $table->timestamp('account_verified_at')->nullable();

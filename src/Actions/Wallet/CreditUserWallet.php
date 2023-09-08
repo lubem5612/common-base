@@ -33,17 +33,20 @@ class CreditUserWallet extends Action
 
     private function setUserWallet()
     {
+        abort_unless(auth()->check(), 401, 'you must be authenticated');
+
         if (array_key_exists('user_id', $this->validatedData) && $this->validatedData['user_id']) {
             $this->wallet = Wallet::query()->where('user_id', $this->validatedData['user_id'])->first();
         }else {
-            $this->wallet = Wallet::query()->where('user_id',auth()->id())->first();
+            $this->validatedData['user_id'] = auth()->id();
+            $this->wallet = Wallet::query()->where('user_id', $this->validatedData['user_id'])->first();
         }
         return $this;
     }
 
     private function checkIfWalletIsActive()
     {
-        abort_if($this->wallet->status!='active', 403, response()->json(['message' => 'wallet not active', 'success' => false, 'data' => null]));
+        abort_if($this->wallet->status!='active', 403, 'wallet not active');
         return $this;
     }
 
@@ -51,7 +54,7 @@ class CreditUserWallet extends Action
     {
         $response = (new CreateTransaction($this->validatedData))->execute();
         $array = json_decode($response->getContent(), true);
-        abort_unless($array['success'], 403, response()->json(['message' => 'unable to save transaction', 'success' => false, 'data' => $array]));
+        abort_unless($array['success'], 403, 'unable to save transaction');
         return $this;
     }
 

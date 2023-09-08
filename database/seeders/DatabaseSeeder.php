@@ -13,6 +13,7 @@ class DatabaseSeeder
             'countries' => CountryTableSeeder::class,
             'states' => StateTableSeeder::class,
             'users' => UserTableSeeder::class,
+            'virtual_accounts' => KudaAccountSeeder::class,
         ];
     }
 

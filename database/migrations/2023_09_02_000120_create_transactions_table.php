@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('reference', 50);
+            $table->string('api_reference', 100)->nullable();
             $table->decimal('amount', 9, 9);
             $table->decimal('charges', 7, 9)->default(0.00);
             $table->decimal('commission', 7, 9)->default(0.00);
@@ -32,6 +33,7 @@ return new class extends Migration
             $table->index(['category', 'status']);
             $table->index(['commission']);
             $table->index(['description']);
+            $table->index(['api_reference']);
         });
     }
 
