@@ -23,7 +23,8 @@ class KycHelperTest extends TestCase
     function can_get_account_kyc()
     {
         $response = (new KycHelper(['user_id' => $this->user->id]))->execute();
-//        $response = json_decode($response->toArra, true);
-        dd($this->user);
+        $this->assertTrue($response['success']);
+        $this->assertNotNull($response['data']);
+        dd($response['data']);
     }
 }

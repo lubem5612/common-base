@@ -146,7 +146,7 @@ class KycHelper
             if (!in_array($row, $nullables)) {
                 $total += 1;
                 if ($this->kyc->$row != null) $filled++;
-                else array_push($this->missing_fields, $this->kyc->$row);
+                else array_push($this->missing_fields, $row);
             }
         }
         //calculate percentage
@@ -160,11 +160,9 @@ class KycHelper
             'success' => $this->k_success,
             'message' => $this->k_message,
             'data' => [
-                'withdrawal_limit' => $this->user->refresh()->withdrawal_limit,
-                'account_type' => $this->user->refresh()->account_type,
                 'percentage_completion' => $this->percentage_completion,
                 'missing_fields' => $this->missing_fields,
-                'account' => $this->kyc
+                'kyc' => $this->kyc
             ],
         ];
     }
