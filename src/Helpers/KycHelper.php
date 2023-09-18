@@ -45,7 +45,7 @@ class KycHelper
     {
         if ($this->isClassicCompliant() && $this->user->is_verified == 'yes') {
             if ($this->user->account_type == 'ordinary') {
-                Support::query()->create([
+                Support::query()->updateOrCreate([
                     'user_id' => $this->user->id,
                     'title' => "Kindly update my account {$this->user->account_number} to classic",
                     'type' => "ACCOUNT_UPGRADE",
@@ -130,7 +130,7 @@ class KycHelper
     private function setUserAndKyc()
     {
         $this->user = User::query()->find($this->validatedData['user_id']);
-        $this->kyc = Kyc::query()->where('user_id', $this->user->id)->first();
+        $this->kyc = $this->user->kyc;
         return $this;
     }
 
@@ -164,7 +164,7 @@ class KycHelper
                 'account_type' => $this->user->refresh()->account_type,
                 'percentage_completion' => $this->percentage_completion,
                 'missing_fields' => $this->missing_fields,
-                'account' => $this->user->load('kyc')
+                'account' => $this->kyc
             ],
         ];
     }
@@ -172,7 +172,7 @@ class KycHelper
     private function validateRequest()
     {
         $this->validatedData = $this->validate($this->request, [
-            "user_id" => "required",
+            "user_id" => "required|exists:users,id",
         ]);
 
         return $this;
