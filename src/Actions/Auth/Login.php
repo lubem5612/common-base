@@ -25,7 +25,7 @@ class Login
     public function execute()
     {
         try {
-            return $this->login();
+            return $this->validateRequest()->login();
         }catch (\Exception $e) {
             return $this->sendServerError($e);
         }
