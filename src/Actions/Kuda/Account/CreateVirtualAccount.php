@@ -59,7 +59,7 @@ class CreateVirtualAccount
 
             DB::table('users')->insert($this->validatedData);
         }else {
-            abort(403, response()->json(['message' =>'unable to create kuda account', 'data' => $response, 'success' => false])->getContent());
+            abort(403, 'unable to create kuda account');
         }
         return $this;
     }

@@ -44,7 +44,7 @@ class UpdateVirtualAccount
     {
         $this->kudaData['trackingReference'] = $this->validatedData['user_id'];
         $this->response = (new KudaApiHelper(['serviceType' => 'ADMIN_UPDATE_VIRTUAL_ACCOUNT', 'data' => $this->kudaData]))->execute();
-        abort_if($this->response['success']==false, 403, response()->json(['message' => 'kuda account update failed', 'data' => $this->response, 'success' => false]));
+        abort_unless($this->response['success'], 403, 'kuda account update failed');
 
         return $this;
     }

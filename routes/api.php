@@ -13,7 +13,7 @@ use Transave\CommonBase\Http\Controllers\SupportController;
 use Transave\CommonBase\Http\Controllers\SupportReplyController;
 use Transave\CommonBase\Http\Controllers\UserController;
 
-Route::group(['as' => 'transave'], function () {
+Route::group(['as' => 'transave.'], function () {
     //authentication routes
     Route::post('login', [AuthController::class, 'login'])->name('login');
     Route::post('register', [AuthController::class, 'register'])->name('register');
