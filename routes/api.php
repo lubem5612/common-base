@@ -34,8 +34,7 @@ Route::group(['as' => 'transave'], function () {
         Route::patch('{id}/account-status', [ UserController::class, 'updateAccountStatus'])->name('update.account-status');
         Route::post('{id}/update', [ UserController::class, 'update'])->name('users.update');
         Route::patch('change-email', [ UserController::class, 'changeEmail'])->name('users.change-email');
-        Route::patch('change-password', [ UserController::class, 'changePassword'])->name('users.change-email');
-        Route::patch('change-password', [ UserController::class, 'changePassword'])->name('users.change-email');
+        Route::patch('change-password', [ UserController::class, 'changePassword'])->name('users.change-password');
         Route::patch('set-pin', [ UserController::class, 'setPin'])->name('users.set-pin');
         Route::patch('{id}/verify-pin', [ UserController::class, 'verifyPin'])->name('users.verify-pin');
     });
