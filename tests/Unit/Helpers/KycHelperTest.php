@@ -25,6 +25,6 @@ class KycHelperTest extends TestCase
         $response = (new KycHelper(['user_id' => $this->user->id]))->execute();
         $this->assertTrue($response['success']);
         $this->assertNotNull($response['data']);
-        dd($response['data']);
+//        dd($response['data']);
     }
 }
