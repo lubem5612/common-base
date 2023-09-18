@@ -14,7 +14,8 @@ use Transave\CommonBase\Http\Models\User;
 
 class ResendToken extends Action
 {
-    private $request, $validatedInput, $user, $token;
+    private $request, $validatedInput, $token;
+    private User $user;
 
     public function __construct(array $request)
     {
@@ -44,13 +45,13 @@ class ResendToken extends Action
 
     private function setUser()
     {
-        $this->user = User::query()->find($this->validatedInput['user_id']);
+        $this->user = User::query()->where('email', $this->validatedInput['email'])->first();
         return $this;
     }
 
     private function saveToken()
     {
-        abort_if($this->user->is_verified, 403, response()->json(['message' => 'user already exist', 'success' => false, 'data' => null]));
+        abort_if($this->user->is_verified, 403, 'user already verified');
 
         $this->user->update([
             "token" => $this->token,
@@ -74,7 +75,7 @@ class ResendToken extends Action
     private function validateRequest()
     {
         $this->validatedInput = $this->validate($this->request, [
-            "user_id" => 'required|exists:users,id'
+            "email" => 'required|exists:users,email'
         ]);
         return $this;
     }

@@ -5,6 +5,7 @@ namespace Transave\CommonBase\Actions\Kuda\Transaction;
 
 
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Transave\CommonBase\Helpers\KudaApiHelper;
 use Transave\CommonBase\Helpers\ResponseHelper;
 use Transave\CommonBase\Helpers\ValidationHelper;
@@ -51,12 +52,14 @@ class VirtualAccountTransactions
     private function setPageSize()
     {
         if (!array_key_exists('pageSize', $this->validatedData)) $this->validatedData['pageSize'] = 10;
+        $this->validatedData['pageSize'] = (string)$this->validatedData['pageSize'];
         return $this;
     }
 
     private function setPageNumber()
     {
         if (!array_key_exists('pageNumber', $this->validatedData)) $this->validatedData['pageNumber'] = 1;
+        $this->validatedData['pageNumber'] = (string)$this->validatedData['pageNumber'];
         return $this;
     }
 
@@ -76,13 +79,15 @@ class VirtualAccountTransactions
 
     private function validateRequest()
     {
-        $this->validatedData = $this->validate($this->request, [
-            "trackingReference" => 'required|string',
+        $data = $this->validate($this->request, [
+            "user_id" => 'required|string',
             "pageSize" => 'nullable|numeric',
             "pageNumber" => 'nullable|numeric',
             "startDate" => 'nullable',
             "endDate" => 'nullable',
         ]);
+        $this->validatedData = Arr::except($data, ['user_id']);
+        $this->validatedData['trackingReference'] = $data['user_id'];
 
         return $this;
     }

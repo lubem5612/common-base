@@ -15,7 +15,32 @@ class Kyc extends Model
     use HasFactory, UuidHelper;
 
     protected $table = "kycs";
-    protected $guarded = [ "id" ];
+    protected $fillable = [
+        'user_id',
+        'image_url',
+        'identity_card_url',
+        'address_proof_url',
+        'identity_type',
+        'identity_card_number',
+        'country_of_origin_id',
+        'country_of_residence_id',
+        'state_id',
+        'lga_id',
+        'city',
+        'next_of_kin',
+        'next_of_kin_contact',
+        'mother_maiden_name',
+        'residential_status',
+        'employment_status',
+        'employer',
+        'job_title',
+        'educational_qualification',
+        'date_of_employment',
+        'number_of_children',
+        'income_range',
+        'verification_status',
+        'is_loan_compliant',
+    ];
 
     public function user() : BelongsTo
     {

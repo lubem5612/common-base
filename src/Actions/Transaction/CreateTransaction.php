@@ -7,6 +7,7 @@ namespace Transave\CommonBase\Actions\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Transave\CommonBase\Actions\Action;
+use Transave\CommonBase\Http\Models\FailedTransaction;
 use Transave\CommonBase\Http\Models\Transaction;
 
 class CreateTransaction extends Action
@@ -18,13 +19,21 @@ class CreateTransaction extends Action
         $this->request = $request;
     }
 
-    public function handle()
+    public function execute()
     {
-        return $this->validateRequest()
-            ->setReference()
-            ->setStatus()
-            ->setJsonPayload()
-            ->createTransaction();
+        try {
+            return $this->validateRequest()
+                ->setReference()
+                ->setStatus()
+                ->setJsonPayload()
+                ->createTransaction();
+        }catch (\Exception $e) {
+            FailedTransaction::query()->create([
+                'user_id' => $this->validatedData['user_id'],
+                'payload' => json_encode($this->validatedData)
+            ]);
+            return $this->sendServerError($e);
+        }
     }
 
     private function createTransaction()
@@ -52,7 +61,9 @@ class CreateTransaction extends Action
 
     private function setReference()
     {
-        $this->validatedData['reference'] = 'transave-'.Carbon::now()->format('YmdHi').'-'.strtolower(Str::random(9));
+        if (!array_key_exists('reference', $this->validatedData)) {
+            $this->validatedData['reference'] = 'transave-'.Carbon::now()->format('YmdHi').'-'.strtolower(Str::random(9));
+        }
         return $this;
     }
 
@@ -62,8 +73,8 @@ class CreateTransaction extends Action
             'user_id' => 'required|exists:users,id',
             'reference' => 'nullable|string|min:20',
             'amount' => 'required|numeric|gt:0',
-            'charges' => 'nullable|numeric|gt:0',
-            'commission' => 'nullable|numeric|gt:0',
+            'charges' => 'nullable|numeric|gte:0',
+            'commission' => 'nullable|numeric|gte:0',
             'type' => 'required|string|in:debit,credit',
             'description' => 'nullable|string|max:700',
             'category' => 'required|string',

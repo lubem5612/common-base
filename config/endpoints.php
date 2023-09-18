@@ -76,7 +76,7 @@ return [
                 ],
                 'update' => [
                     'name' => 'sometimes|required|string|max:100',
-                    'state_is' => 'sometimes|required|exists:states,id',
+                    'state_id' => 'sometimes|required|exists:states,id',
                 ]
             ],
             'order' => [
@@ -84,6 +84,25 @@ return [
                 'pattern' => 'ASC',
             ],
             'relationships' => ['state', 'state.country'],
+        ],
+        'failed-transactions' => [
+            'model' => \Transave\CommonBase\Http\Models\FailedTransaction::class,
+            'table' => 'failed-transactions',
+            'rules' => [
+                'store' => [
+                    'payload' => 'required|string',
+                    'user_id' => 'required|exists:users,id',
+                ],
+                'update' => [
+                    'payload' => 'sometimes|required|string',
+                    'user_id' => 'sometimes|required|exists:users,id',
+                ]
+            ],
+            'order' => [
+                'column' => 'name',
+                'pattern' => 'ASC',
+            ],
+            'relationships' => ['user'],
         ],
     ]
 ];

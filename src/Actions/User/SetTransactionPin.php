@@ -10,7 +10,7 @@ use Transave\CommonBase\Http\Models\User;
 class SetTransactionPin extends Action
 {
     private $request, $validatedData;
-    private User $user;
+    private $user;
 
     public function __construct(array $request)
     {

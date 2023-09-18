@@ -41,7 +41,7 @@ class ChangePassword extends Action
             'password' => $this->validatedData['old_password']
         ]))->execute();
         $array_content = json_decode($response->getContent(), true);
-        abort_unless($array_content['success'], 401, response()->json(['message' => 'password not match', 'data' => null, 'success' => false]));
+        abort_unless($array_content['success'], 401, 'password does not match');
         return $this;
     }
 

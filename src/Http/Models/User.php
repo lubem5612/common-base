@@ -11,7 +11,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Transave\CommonBase\Actions\Kuda\Account\MainAccountBalance;
+use Transave\CommonBase\Actions\Kuda\Account\VirtualAccountBalance;
 use Transave\CommonBase\Database\Factories\UserFactory;
+use Transave\CommonBase\Helpers\KycHelper;
 use Transave\CommonBase\Helpers\UuidHelper;
 
 class User extends Authenticatable
@@ -28,16 +31,16 @@ class User extends Authenticatable
         'remember_token',
         'transaction_pin',
         'bvn',
+        'account_verified_at'
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'account_verified_at' => 'datetime',
     ];
 
-    public function wallet() : HasOne
-    {
-        return $this->hasOne(Wallet::class);
-    }
+    protected $appends = [
+        'wallet', 'account'
+    ];
 
     public function kyc() : HasOne
     {
@@ -47,6 +50,51 @@ class User extends Authenticatable
     public function transactions() : HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function getWalletAttribute()
+    {
+        if ($this->role=='admin') {
+            $response = (new MainAccountBalance())->execute();
+            if ($response['success']) {
+                return $response['data'];
+            }
+        }else {
+            $response = (new VirtualAccountBalance(['user_id' => $this->id]))->execute();
+            if ($response['success']) {
+                return $response['data'];
+            }
+        }
+        return null;
+    }
+
+    public function getAccountAttribute()
+    {
+        $response = (new KycHelper(['user_id' => $this->id]))->execute();
+        if ($response['success']){
+            return $response['data'];
+        }
+        return null;
+    }
+
+    public function debitCards() : HasMany
+    {
+        return $this->hasMany(DebitCard::class, 'user_id', 'id');
+    }
+
+    public function supports() : HasMany
+    {
+        return $this->hasMany(Support::class);
+    }
+
+    public function supportReplies() : HasMany
+    {
+        return $this->hasMany(SupportReply::class, 'user_id', 'id');
+    }
+
+    public function failedTransactions() : HasMany
+    {
+        return $this->hasMany(FailedTransaction::class, 'user_id', 'id');
     }
 
     protected static function newFactory()

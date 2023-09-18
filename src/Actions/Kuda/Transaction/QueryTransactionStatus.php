@@ -17,10 +17,10 @@ class QueryTransactionStatus
 
     public function __construct(array $request)
     {
-        $this->validatedData = $request;
+        $this->request = $request;
     }
 
-    public function handle()
+    public function execute()
     {
         try {
             return $this->validateRequest()->checkTransactionStatus();
@@ -37,7 +37,7 @@ class QueryTransactionStatus
     private function validateRequest()
     {
         $this->validatedData = $this->validate($this->request, [
-            "isThirdPartyBankTransfer" => "required|boolean",
+            "isThirdPartyBankTransfer" => "required",
             "transactionRequestReference" => "required|string"
         ]);
 

@@ -53,8 +53,8 @@ class UpdateTransaction extends Action
         $this->validatedData = $this->validate($this->request, [
             'transaction_id' => 'required|exists:transactions,id',
             'amount' => 'nullable|numeric|gt:0',
-            'charges' => 'nullable|numeric|gt:0',
-            'commission' => 'nullable|numeric|gt:0',
+            'charges' => 'nullable|numeric|gte:0',
+            'commission' => 'nullable|numeric|gte:0',
             'description' => 'nullable|string|max:700',
             'category' => 'nullable|string',
             'status' => 'nullable|string',

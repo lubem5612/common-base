@@ -5,6 +5,8 @@ namespace Transave\CommonBase\Actions\User;
 
 
 use Transave\CommonBase\Actions\Action;
+use Transave\CommonBase\Actions\Kuda\Account\DisableVirtualAccount;
+use Transave\CommonBase\Actions\Kuda\Account\EnableVirtualAccount;
 use Transave\CommonBase\Http\Models\User;
 
 class UpdateAccountStatus extends Action
@@ -22,6 +24,7 @@ class UpdateAccountStatus extends Action
         return $this
             ->validateRequest()
             ->setUser()
+            ->updateKudaStatus()
             ->updateAccountStatus();
     }
 
@@ -30,8 +33,27 @@ class UpdateAccountStatus extends Action
         $this->user->update([
             'account_status' => $this->validatedData['account_status']
         ]);
-
         return $this->sendSuccess(null, 'account status updated');
+    }
+
+    private function updateKudaStatus()
+    {
+        if ($this->validatedData['account_status'] == 'verified') {
+            $response = (new EnableVirtualAccount([
+                'user_id' => $this->user->id
+            ]))->execute();
+            abort_unless($response['success'], 403, 'unable to enable virtual account');
+        }else {
+            $response = (new DisableVirtualAccount([
+                'user_id' => $this->user->id
+            ]))->execute();
+            $this->user->update([
+                'is_verified' => 'no',
+                'withdrawal_limit' => 0,
+            ]);
+            abort_unless($response['success'], 403, 'unable to disable virtual account');
+        }
+        return $this;
     }
 
     private function setUser()

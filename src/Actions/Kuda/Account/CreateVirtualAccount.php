@@ -161,7 +161,7 @@ class CreateVirtualAccount
             "phone"                 => "required|string|min:9|max:15",
             'password'              => 'required|string|min:6',
             'password_confirmation' => 'required|same:password',
-            'role'                  => 'nullable'
+            'role'                  => 'nullable|in:customer,staff'
         ]);
 
         $this->validatedData = Arr::except($data, ['password_confirmation']);

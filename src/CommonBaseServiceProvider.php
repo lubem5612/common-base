@@ -2,11 +2,17 @@
 
 namespace Transave\CommonBase;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Transave\CommonBase\Console\Seeder;
+use Transave\CommonBase\Http\Middlewares\AcceptNonNegativeAmount;
+use Transave\CommonBase\Http\Middlewares\AccountVerification;
+use Transave\CommonBase\Http\Middlewares\AllowIfAdmin;
 use Transave\CommonBase\Http\Models\User;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Routing\Router;
 
 class CommonBaseServiceProvider extends ServiceProvider
 {
@@ -35,8 +41,9 @@ class CommonBaseServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap the application services.
+     * @param Kernel $kernel
      */
-    public function boot()
+    public function boot(Kernel $kernel)
     {
         /*
          * Optional methods to load your package assets
@@ -50,6 +57,14 @@ class CommonBaseServiceProvider extends ServiceProvider
         }
 
         $this->defineDefaultConfig();
+
+        //load global middleware
+        $kernel->pushMiddleware(AcceptNonNegativeAmount::class);
+
+        //load route middleware
+        $router = $this->app->make(Router::class);
+        $router->aliasMiddleware('admin', AllowIfAdmin::class);
+        $router->aliasMiddleware('verification', AccountVerification::class);
     }
 
     /**
@@ -80,7 +95,7 @@ class CommonBaseServiceProvider extends ServiceProvider
 
         // Registering package commands.
         $this->commands([
-            Seeder::class
+            Seeder::class,
         ]);
     }
 
@@ -136,5 +151,13 @@ class CommonBaseServiceProvider extends ServiceProvider
             'middleware'    => config('commonbase.route.middleware'),
         ];
     }
+
+//    protected function scheduler()
+//    {
+//        $this->app->booted(function () {
+//            $schedule = $this->app->make(Schedule::class);
+//            $schedule->command('transave:balance')->hourly();
+//        });
+//    }
 
 }

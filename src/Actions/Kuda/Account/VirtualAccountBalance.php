@@ -4,8 +4,6 @@
 namespace Transave\CommonBase\Actions\Kuda\Account;
 
 
-use Transave\CommonBase\Helpers\ManageResponse;
-use Transave\CommonBase\Kuda\Helpers\Api;
 use Transave\CommonBase\Helpers\KudaApiHelper;
 use Transave\CommonBase\Helpers\ResponseHelper;
 use Transave\CommonBase\Helpers\ValidationHelper;

@@ -4,7 +4,9 @@
 namespace Transave\CommonBase\Helpers;
 
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 trait SessionHelper
 {
@@ -18,6 +20,11 @@ trait SessionHelper
     protected function getSession($user_id) : int
     {
         return Cache::store('file')->get($user_id);
+    }
+
+    protected function generateReference()
+    {
+        return 'transave-'.Carbon::now()->format('YmdHi').'-'.strtolower(Str::random(9));
     }
 
 }

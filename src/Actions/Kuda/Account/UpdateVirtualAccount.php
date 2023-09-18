@@ -31,7 +31,6 @@ class UpdateVirtualAccount
             return $this
                 ->validateRequest()
                 ->setUser()
-                ->setEmail()
                 ->setFirstName()
                 ->setLastName()
                 ->updateVirtualAccount()
@@ -47,14 +46,6 @@ class UpdateVirtualAccount
         $this->response = (new KudaApiHelper(['serviceType' => 'ADMIN_UPDATE_VIRTUAL_ACCOUNT', 'data' => $this->kudaData]))->execute();
         abort_if($this->response['success']==false, 403, response()->json(['message' => 'kuda account update failed', 'data' => $this->response, 'success' => false]));
 
-        return $this;
-    }
-
-    private function setEmail()
-    {
-        if (array_key_exists('email', $this->validatedData)) {
-            $this->kudaData['email'] = $this->validatedData['email'];
-        }
         return $this;
     }
 
@@ -89,7 +80,6 @@ class UpdateVirtualAccount
     {
         $this->validatedData = $this->validate($this->request, [
             'user_id' => ['required', 'exists:users,id'],
-            "email" => ["nullable", "email"],
             'first_name' => ['sometimes', 'required', 'string', 'max:50'],
             'last_name' => ['sometimes', 'required', 'string', 'max:50'],
             'middle_name' => ['sometimes', 'required', 'string', 'max:50'],
@@ -113,12 +103,11 @@ class UpdateVirtualAccount
             'employer' => ['nullable', 'string', 'max:255'],
             'job_title' => ['nullable', 'string', 'max:150'],
             'educational_qualification' => ['nullable', 'string', 'max:80'],
-            'date_of_employment' => ['nullable', 'string'],
-            'number_of_children' => ['nullable', 'string'],
-            'income_range' => ['nullable', 'array'],
-            'income_range.*' => ['nullable', 'numeric'],
-            'verification_status' => ['nullable', 'string', 'in:verified,incomplete,unverified'],
-            'is_loan_compliant' => ['nullable', 'string', 'in:yes,no'],
+            'date_of_employment' => ['nullable', 'date'],
+            'number_of_children' => ['nullable', 'integer'],
+            'income_range' => ['nullable'],
+//            'verification_status' => ['nullable', 'string', 'in:verified,incomplete,unverified'],
+//            'is_loan_compliant' => ['nullable', 'string', 'in:yes,no'],
         ]);
         return $this;
     }

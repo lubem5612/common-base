@@ -40,9 +40,13 @@ class KudaApiHelper
             $this->kudaStatus = false;
         }
         return [
-            'data'      => $this->kudaResponse,
-            'success'   => $this->kudaStatus,
-            'message'   => $this->kudaMessage
+            'data'          => $this->kudaResponse,
+            'success'       => $this->kudaStatus,
+            'message'       => $this->kudaMessage,
+            'meta_data'     => [
+                'requestRef' => $this->validatedData['requestRef'],
+                'serviceType'=> $this->validatedData['serviceType']
+            ]
         ];
     }
 
@@ -83,6 +87,7 @@ class KudaApiHelper
      */
     private function makeApiCall()
     {
+//        return $this->validatedData;
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$this->accessToken,
             'Content-Type' => 'application/json',

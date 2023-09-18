@@ -21,7 +21,7 @@ class MainAccountTransactions
         $this->request = $request;
     }
 
-    public function handle()
+    public function execute()
     {
         try {
             return $this
@@ -50,13 +50,17 @@ class MainAccountTransactions
 
     private function setPageSize()
     {
-        if (!array_key_exists('pageSize', $this->validatedData)) $this->validatedData['pageSize'] = 10;
+        if (!array_key_exists('pageSize', $this->validatedData)) $this->validatedData['pageSize'] = "10";
+        else
+            $this->validatedData['pageSize'] = (string)$this->validatedData['pageSize'];
         return $this;
     }
 
     private function setPageNumber()
     {
-        if (!array_key_exists('pageNumber', $this->validatedData)) $this->validatedData['pageNumber'] = 1;
+        if (!array_key_exists('pageNumber', $this->validatedData)) $this->validatedData['pageNumber'] = "1";
+        else
+            $this->validatedData['pageNumber'] = (string)$this->validatedData['pageNumber'];
         return $this;
     }
 
@@ -77,8 +81,8 @@ class MainAccountTransactions
     private function validateRequest()
     {
         $this->validatedData = $this->validate($this->request, [
-            "pageSize" => 'nullable|numeric',
-            "pageNumber" => 'nullable|numeric',
+            "pageSize" => 'required',
+            "pageNumber" => 'required',
             "startDate" => 'nullable',
             "endDate" => 'nullable',
         ]);

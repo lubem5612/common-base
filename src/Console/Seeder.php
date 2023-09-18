@@ -19,7 +19,7 @@ class Seeder extends Command
             $this->info('seeding '.$index.' begins');
             $seed = new $seeder();
             $seed->run();
-            $this->info($index.'seeded successfully');
+            $this->info($index.' seeded successfully');
         }
     }
 }

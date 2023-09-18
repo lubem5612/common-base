@@ -5,12 +5,13 @@ namespace Transave\CommonBase\Actions\User;
 
 
 use Transave\CommonBase\Actions\Action;
+use Transave\CommonBase\Actions\Kuda\Account\UpdateVirtualAccount;
 use Transave\CommonBase\Http\Models\User;
 
 class ChangeEmail extends Action
 {
     private $request, $validatedData;
-    private User $user;
+    private $user;
 
     public function __construct(array $request)
     {
@@ -32,8 +33,15 @@ class ChangeEmail extends Action
     {
         $this->user->email = $this->validatedData['email'];
         $this->user->save();
+        $response = (new UpdateVirtualAccount([
+            'email' => $this->user->refresh()->email,
+            'user_id' => $this->user->id,
+        ]))->execute();
 
-        return $this->sendSuccess(null, 'user email changed');
+        if ($response['success']) {
+            return $this->sendSuccess(null, 'user email changed');
+        }
+        return $this->sendError('failed in updating kuda account', $response);
     }
 
     private function validateRequest() : self

@@ -41,7 +41,7 @@ class ResetPassword extends Action
         $this->user = User::query()->where("email", $reset->email)->first();
 
         $isExpired = Carbon::now()->gt(Carbon::parse($reset->created_at)->addMinutes(10));
-        abort_if($isExpired, 403, response()->json(['message' => 'token expired', 'success' => false, 'data' => null]));
+        abort_if($isExpired, 403,  'token expired');
         return $this;
     }
 
@@ -56,7 +56,8 @@ class ResetPassword extends Action
     {
         $this->validatedInput = $this->validate($this->request, [
             'token' => 'required|integer|digits:4',
-            'password' => 'required|string|min:6'
+            'password' => 'required|string|min:6',
+            'password_confirmation' => 'required|same:password'
         ]);
         return $this;
     }

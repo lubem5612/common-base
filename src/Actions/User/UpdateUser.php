@@ -21,7 +21,7 @@ class UpdateUser
 
     public function __construct(array $request)
     {
-        $this->request = $request;
+        $this->validatedData = $request;
         $this->uploader = new UploadHelper();
     }
 
@@ -29,7 +29,6 @@ class UpdateUser
     {
         try {
             return $this
-                ->validateRequest()
                 ->setKyCData()
                 ->setUser()
                 ->setKyc()
@@ -125,51 +124,13 @@ class UpdateUser
 
     private function setKyc()
     {
-        $this->kyc = Kyc::query()->where('user_id', $this->validatedData['user_id']);
+        $this->kyc = Kyc::query()->where('user_id', $this->validatedData['user_id'])->first();
         return $this;
     }
 
     private function updateKycRecord()
     {
         $this->kyc->fill($this->kycData)->save();
-        return $this;
-    }
-
-    private function validateRequest()
-    {
-        $this->validatedData = $this->validate($this->request, [
-            'user_id' => ['required', 'exists:users,id'],
-            'first_name' => ['sometimes', 'required', 'string', 'max:50'],
-            'last_name' => ['sometimes', 'required', 'string', 'max:50'],
-            'middle_name' => ['sometimes', 'required', 'string', 'max:50'],
-            'business_name' => ['sometimes', 'required', 'string', 'max:150'],
-            'bvn' => ['sometimes', 'required', 'numeric', 'between:10000000000,99999999999'],
-
-            'image' => ['nullable', 'file', 'max:3000', 'mimes:gif,jpg,jpeg,png,webp'],
-            'identity_card' => ['nullable', 'file', 'max:3000', 'mimes:gif,jpg,jpeg,png,webp,pdf'],
-            'address_proof' => ['nullable', 'file', 'max:3000', 'mimes:gif,jpg,jpeg,png,webp,pdf'],
-            'identity_type' => ['nullable', 'string','max:150'],
-            'identity_card_number' => ['nullable', 'string','max:150'],
-            'country_of_origin_id' => ['nullable', 'exists:countries,id'],
-            'country_of_residence_id' => ['nullable', 'exists:countries,id'],
-            'state_id' => ['nullable', 'exists:states,id'],
-            'lga_id' => ['nullable', 'exists:lgas,id'],
-            'city' => ['nullable', 'string', 'max:150'],
-            'next_of_kin' => ['nullable', 'string', 'max:100'],
-            'next_of_kin_contact' => ['nullable', 'string', 'max:15'],
-            'mother_maiden_name' => ['nullable', 'string', 'max:50'],
-            'residential_status' => ['nullable', 'string', 'max:50'],
-            'employment_status' => ['nullable', 'string', 'max:50'],
-            'employer' => ['nullable', 'string', 'max:255'],
-            'job_title' => ['nullable', 'string', 'max:150'],
-            'educational_qualification' => ['nullable', 'string', 'max:80'],
-            'date_of_employment' => ['nullable', 'string'],
-            'number_of_children' => ['nullable', 'string'],
-            'income_range' => ['nullable', 'array'],
-            'income_range.*' => ['nullable', 'numeric'],
-            'verification_status' => ['nullable', 'string', 'in:verified,incomplete,unverified'],
-            'is_loan_compliant' => ['nullable', 'string', 'in:yes,no'],
-        ]);
         return $this;
     }
 }

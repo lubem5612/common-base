@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Transave\CommonBase\Actions\Action;
 use Transave\CommonBase\Actions\SMS\TermiiService;
+use Transave\CommonBase\Helpers\PhoneHelper;
 use Transave\CommonBase\Http\Models\User;
 
 class ForgotPassword extends Action
 {
+    use PhoneHelper;
     private $validatedData, $request, $token, $message;
     private User $user;
 
@@ -34,7 +36,7 @@ class ForgotPassword extends Action
 
     private function setUser()
     {
-        $this->user = User::query()->where("email", $this->validatedData["email"])->first();
+        $this->user = User::query()->where("email", $this->validatedData['email'])->first();
         return $this;
     }
 
@@ -46,7 +48,7 @@ class ForgotPassword extends Action
             "created_at" => Carbon::now()
         ]);
 
-        $this->message = "A password reset token has been sent to your email";
+        $this->message = "A password reset token has been sent to your phone";
         return $this;
     }
 
