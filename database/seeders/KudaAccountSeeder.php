@@ -33,7 +33,7 @@ class KudaAccountSeeder
                 $total = $response['data']['totalCount'];
                 //create users;
                 foreach ($data as $user) {
-                    if (User::query()->find($user['trackingReference'])->doesntExist()) {
+                    if (User::query()->where('id', $user['trackingReference'])->doesntExist()) {
                         DB::table('users')->insert([
                             'id' => $user['trackingReference'],
                             'first_name' => $user['firstName'],
