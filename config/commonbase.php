@@ -21,7 +21,7 @@ return [
         'api_key'           => env('KUDA_API_KEY', ''),
         'email'             => env('KUDA_EMAIL', 'ezugwuchigozie1@gmail.com'),
         'webhook_url'       => env('KUDA_WEBHOOK_URL', ''),
-        'bank_code'    => env('KUDA_ACCOUNT_BANK_CODE', "999129"),
+        'bank_code'         => env('KUDA_ACCOUNT_BANK_CODE', "999129"),
     ],
 
     'termii' => [
@@ -40,10 +40,10 @@ return [
     ],
 
     'flutterwave' => [
-        'secret_key' => env('FLUTTERWAVE_SECRET_KEY', ''),
-        'public_key' => env('FLUTTERWAVE_PUBLIC_KEY', ''),
-        'redirect_url' => env('FLUTTERWAVE_REDIRECT_URL', 'https://transave.com.ng/dashboard'),
-        'base_url'      => env('FLUTTERWAVE_BASE_URL', 'https://api.flutterwave.com/v3')
+        'secret_key'        => env('FLUTTERWAVE_SECRET_KEY', ''),
+        'public_key'        => env('FLUTTERWAVE_PUBLIC_KEY', ''),
+        'redirect_url'      => env('FLUTTERWAVE_REDIRECT_URL', 'https://transave.com.ng/dashboard'),
+        'base_url'          => env('FLUTTERWAVE_BASE_URL', 'https://api.flutterwave.com/v3')
     ],
 
     'storage' => [
