@@ -15,7 +15,6 @@ use Transave\CommonBase\Helpers\ResponseHelper;
 use Transave\CommonBase\Helpers\ValidationHelper;
 use Transave\CommonBase\Http\Models\Kyc;
 use Transave\CommonBase\Http\Models\User;
-use Transave\CommonBase\Http\Models\Wallet;
 
 class CreateVirtualAccount
 {
@@ -101,7 +100,6 @@ class CreateVirtualAccount
     private function createWalletAndKyc()
     {
         $this->user = User::query()->find($this->validatedData['id']);
-        Wallet::query()->create(['user_id' => $this->user->id]);
         Kyc::query()->create(['user_id' => $this->user->id]);
 
         return $this;
