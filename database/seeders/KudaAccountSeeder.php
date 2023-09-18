@@ -10,7 +10,6 @@ use Transave\CommonBase\Actions\Kuda\Account\ListVirtualAccounts;
 use Transave\CommonBase\Actions\SMS\TermiiService;
 use Transave\CommonBase\Http\Models\Kyc;
 use Transave\CommonBase\Http\Models\User;
-use Transave\CommonBase\Http\Models\Wallet;
 
 class KudaAccountSeeder
 {
@@ -68,7 +67,6 @@ class KudaAccountSeeder
 
     private function createWalletAndKyc($user)
     {
-        Wallet::query()->create(['user_id' => $user->id]);
         Kyc::query()->create(['user_id' => $user->id]);
     }
 
