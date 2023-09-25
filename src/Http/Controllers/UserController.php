@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Transave\CommonBase\Actions\Kuda\Account\UpdateVirtualAccount;
 use Transave\CommonBase\Actions\User\ChangeEmail;
 use Transave\CommonBase\Actions\User\ChangePassword;
+use Transave\CommonBase\Actions\User\DeleteAccount;
+use Transave\CommonBase\Actions\User\RestoreAccount;
 use Transave\CommonBase\Actions\User\SearchUsers;
 use Transave\CommonBase\Actions\User\SetTransactionPin;
 use Transave\CommonBase\Actions\User\UpdateAccountStatus;
@@ -130,5 +132,27 @@ class UserController extends Controller
             'user_id' => $id,
             'account_type' => $request->get('account_type')
         ]))->execute();
+    }
+
+    /**
+     * Soft delete and deactivate account
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|DeleteAccount
+     */
+    public function delete(Request $request)
+    {
+        return (new DeleteAccount(['user_id' => $request->get('user_id')]))->execute();
+    }
+
+    /**
+     * Restore Soft deleted account
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|RestoreAccount
+     */
+    public function restore(Request $request)
+    {
+        return (new RestoreAccount(['user_id' => $request->get('user_id')]))->execute();
     }
 }

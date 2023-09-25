@@ -37,6 +37,8 @@ Route::group(['as' => 'transave.'], function () {
         Route::patch('change-password', [ UserController::class, 'changePassword'])->name('users.change-password');
         Route::patch('set-pin', [ UserController::class, 'setPin'])->name('users.set-pin');
         Route::patch('{id}/verify-pin', [ UserController::class, 'verifyPin'])->name('users.verify-pin');
+        Route::patch('deactivate-account', [UserController::class, 'delete'])->name('users.delete');
+        Route::patch('restore-account', [UserController::class, 'restore'])->name('users.restore');
     });
 
     //support controller routes
