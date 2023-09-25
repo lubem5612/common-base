@@ -33,6 +33,8 @@ return new class extends Migration
             $table->enum('account_status', ['unverified', 'verified', 'suspended', 'banned'])->default('unverified')->index();
             $table->string('password');
             $table->timestamps();
+
+            $table->softDeletes();
         });
     }
 
