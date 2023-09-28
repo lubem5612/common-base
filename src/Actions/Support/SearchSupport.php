@@ -3,7 +3,7 @@
 namespace Transave\CommonBase\Actions\Support;
 
 
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Transave\CommonBase\Helpers\SearchHelper;
 
 class SearchSupport

@@ -37,7 +37,7 @@ class Login
         if(filter_var($input, FILTER_VALIDATE_EMAIL)) {
             return 'email';
         } elseif ($this->isPhoneNumber($input)) {
-            $this->request['username'] = $this->getInternationalNumber($input);
+            $this->validatedData['username'] = $this->getInternationalNumber($input);
             return 'phone';
         }else{
             return 'bvn';

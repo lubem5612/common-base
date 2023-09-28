@@ -4,7 +4,7 @@
 namespace Transave\CommonBase\Actions\DebitCard;
 
 
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Transave\CommonBase\Helpers\SearchHelper;
 
 class SearchDebitCard

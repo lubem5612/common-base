@@ -5,7 +5,7 @@ namespace Transave\CommonBase\Actions\Resource;
 
 
 use Carbon\Carbon;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Transave\CommonBase\Helpers\ResponseHelper;
 
 class SearchResource
@@ -82,7 +82,7 @@ class SearchResource
                 if (isset($state)) {
                     $this->queryBuilder->where('state_id', $state);
                 }
-                $this->queryBuilder->where(function($q) use($search) {
+                $this->queryBuilder->where(function(Builder $q) use($search) {
                     $q->where("name", "like", "%$search%")
                         ->orWhereHas("state", function ($q2) use($search) {
                             $q2->where("name", "like", "%$search%")
