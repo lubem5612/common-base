@@ -96,7 +96,7 @@ Route::group(['as' => 'transave.'], function () {
     });
 
     //resource controller routes
-    Route::as('resources.')->group(function () {
+    Route::as('resources.')->prefix('general')->group(function () {
         Route::get('{endpoint}', [ResourceController::class, 'index'])->name('index');
         Route::post('{endpoint}', [ResourceController::class, 'store'])->name('store');
         Route::get('{endpoint}/{id}', [ResourceController::class, 'show'])->name('show');
