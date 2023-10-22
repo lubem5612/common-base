@@ -55,7 +55,7 @@ class User extends Authenticatable
 
     public function getWalletAttribute()
     {
-        if ($this->role=='admin') {
+        if (in_array($this->role, ['admin', 'super', 'support'])) {
             $response = (new MainAccountBalance())->execute();
             if ($response['success']) {
                 return $response['data'];
@@ -71,10 +71,13 @@ class User extends Authenticatable
 
     public function getAccountAttribute()
     {
-        $response = (new KycHelper(['user_id' => $this->id]))->execute();
-        if ($response['success']){
-            return $response['data'];
+        if (!in_array($this->role, ['admin', 'super', 'support'])) {
+            $response = (new KycHelper(['user_id' => $this->id]))->execute();
+            if ($response['success']){
+                return $response['data'];
+            }
         }
+
         return null;
     }
 
