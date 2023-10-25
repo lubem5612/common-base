@@ -95,7 +95,10 @@ class KudaApiHelper
             'Cache-Control' => 'no-cache',
         ])->withoutVerifying()->post(config('commonbase.kuda.base_url').'/', $this->validatedData)->json();
 
-        if (array_key_exists('status', $response) && $response['status']) {
+        if (!is_array($response)) {
+            $this->kudaMessage = 'error in api response';
+            $this->kudaResponse = $response;
+        }elseif (array_key_exists('status', $response) && $response['status']) {
             $this->kudaResponse = isset($response['data'])? $response['data'] : null;
             $this->kudaMessage = isset($response['message'])? $response['message'] : 'api call successful';
             $this->kudaStatus = true;
