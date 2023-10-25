@@ -9,11 +9,13 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Transave\CommonBase\Actions\Action;
 use Transave\CommonBase\Actions\SMS\TermiiService;
+use Transave\CommonBase\Helpers\PhoneHelper;
 use Transave\CommonBase\Http\Models\User;
 
 
 class ResendToken extends Action
 {
+    use PhoneHelper;
     private $request, $validatedInput, $token;
     private User $user;
 
@@ -45,13 +47,13 @@ class ResendToken extends Action
 
     private function setUser()
     {
-        $this->user = User::query()->where('email', $this->validatedInput['email'])->first();
+        $this->user = User::query()->where('phone', $this->validatedInput['phone'])->first();
         return $this;
     }
 
     private function saveToken()
     {
-        abort_if($this->user->is_verified, 403, 'user already verified');
+        abort_if($this->user->is_verified=='yes', 403, 'user already verified');
 
         $this->user->update([
             "token" => $this->token,
@@ -75,8 +77,9 @@ class ResendToken extends Action
     private function validateRequest()
     {
         $this->validatedInput = $this->validate($this->request, [
-            "email" => 'required|exists:users,email'
+            "phone" => 'required|string'
         ]);
+        $this->validatedInput['phone'] = $this->getInternationalNumber($this->validatedInput['phone']);
         return $this;
     }
 }

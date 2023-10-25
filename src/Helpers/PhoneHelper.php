@@ -13,7 +13,7 @@ trait PhoneHelper
         if (Str::startsWith($phone, '0')) {
             return '+234'.$phone;
         }else {
-            $countPlus =substr_count($phone, '+234');
+            $countPlus = substr_count($phone, '+234');
             $offset = $countPlus * 4;
             $phoneFormatted = substr($phone, $offset);
             return Str::start($phoneFormatted, '+234');

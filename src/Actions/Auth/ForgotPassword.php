@@ -27,6 +27,7 @@ class ForgotPassword extends Action
     {
         return $this
             ->validateRequest()
+            ->formatPhoneNumber()
             ->setUser()
             ->generateCode()
             ->deleteResetIfExists()
@@ -36,14 +37,14 @@ class ForgotPassword extends Action
 
     private function setUser()
     {
-        $this->user = User::query()->where("email", $this->validatedData['email'])->first();
+        $this->user = User::query()->where("phone", $this->validatedData['phone'])->first();
         return $this;
     }
 
     private function createPasswordReset()
     {
         DB::table('password_resets')->insert([
-            "email" => $this->user->email,
+            "email" => $this->user->phone,
             "token" => $this->token,
             "created_at" => Carbon::now()
         ]);
@@ -60,11 +61,18 @@ class ForgotPassword extends Action
 
     private function deleteResetIfExists()
     {
-        if (DB::table('password_resets')->where('email', $this->user->email)->exists()) {
-            DB::table('password_resets')->where('email', $this->user->email)->delete();
+        if (DB::table('password_resets')->where('email', $this->user->phone)->exists()) {
+            DB::table('password_resets')->where('email', $this->user->phone)->delete();
         }
         return $this;
     }
+
+    private function formatPhoneNumber()
+    {
+        $this->validatedData['phone'] = $this->getInternationalNumber($this->validatedData['phone']);
+        return $this;
+    }
+
 
     private function sendNotification()
     {
@@ -81,7 +89,7 @@ class ForgotPassword extends Action
     private function validateRequest() : self
     {
         $this->validatedData = $this->validate($this->request, [
-            'email' => ['required', 'email'],
+            'phone' => ['required', 'string'],
         ]);
         return  $this;
     }

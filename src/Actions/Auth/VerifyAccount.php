@@ -30,15 +30,15 @@ class VerifyAccount extends Action
     private function setUser()
     {
         $this->user = User::query()->where('verification_token', $this->validatedData['verification_token'])->first();
-        abort_if(empty($this->user), 404, response()->json(['message' => 'user not found', 'success' => false, 'data' => null]));
-        abort_if($this->user->is_verified == 'yes', 404, response()->json(['message' => 'account already verified', 'success' => false, 'data' => null]));
+        abort_if(empty($this->user), 404, 'user not found');
+        abort_if($this->user->is_verified == 'yes', 404, 'account already verified');
         return $this;
     }
 
     private function checkTokenExpiry()
     {
         $isExpired = Carbon::now()->gt(Carbon::parse($this->user->account_verified_at)->addMinutes(10));
-        abort_if($isExpired, 404, response()->json(['message' => 'token has expired', 'success' => false, 'data' => null]));
+        abort_if($isExpired, 404, 'token has expired');
         return $this;
     }
 

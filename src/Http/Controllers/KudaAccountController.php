@@ -37,23 +37,19 @@ class KudaAccountController extends Controller
             "user_id"                       => $request->get('sender_user_id'),
         ]))->execute();
 
-        abort_unless($response['success'], 403, 'failed in fetching beneficiary account');
-        return $response['data'];
+        return $response;
     }
 
     public function virtualAccountTransfer(Request $request)
     {
         $response = (new VirtualAccountFundTransfer($request->all()))->execute();
 
-        abort_unless($response['success'], 403, 'failed in fund transfer from virtual account');
         return $response;
     }
 
     public function mainAccountTransfer(Request $request)
     {
         $response = (new MainAccountFundTransfer($request->all()))->execute();
-
-        abort_unless($response['success'], 403, 'failed in fund transfer from main account');
         return $response;
     }
 
@@ -65,7 +61,6 @@ class KudaAccountController extends Controller
             'narration' => $request->get('narration')
         ]))->execute();
 
-        abort_unless($response['success'], 403, 'failed in wallet to wallet transfer');
         return $response;
     }
 

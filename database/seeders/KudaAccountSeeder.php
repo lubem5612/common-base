@@ -8,11 +8,13 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Transave\CommonBase\Actions\Kuda\Account\ListVirtualAccounts;
 use Transave\CommonBase\Actions\SMS\TermiiService;
+use Transave\CommonBase\Helpers\PhoneHelper;
 use Transave\CommonBase\Http\Models\Kyc;
 use Transave\CommonBase\Http\Models\User;
 
 class KudaAccountSeeder
 {
+    use PhoneHelper;
     public function run()
     {
         if (User::query()->where('role', 'customer')->doesntExist()) {
@@ -40,7 +42,7 @@ class KudaAccountSeeder
                             'middle_name' => $user['middleName'],
                             'business_name' => $user['bussinessName'],
                             'email' => $user['email'],
-                            'phone' => $user['phoneNumber'],
+                            'phone' => $this->getInternationalNumber($user['phoneNumber']),
                             'account_number' => $user['accountNumber'],
                             'withdrawal_limit' => 0.00,
                             'role' => 'customer',

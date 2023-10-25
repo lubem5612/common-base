@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Transave\CommonBase\Actions\SMS\TermiiService;
 use Transave\CommonBase\Helpers\KudaApiHelper;
+use Transave\CommonBase\Helpers\PhoneHelper;
 use Transave\CommonBase\Helpers\ResponseHelper;
 use Transave\CommonBase\Helpers\ValidationHelper;
 use Transave\CommonBase\Http\Models\Kyc;
@@ -18,7 +19,7 @@ use Transave\CommonBase\Http\Models\User;
 
 class CreateVirtualAccount
 {
-    use ValidationHelper, ResponseHelper;
+    use ValidationHelper, ResponseHelper, PhoneHelper;
 
     private array $request;
     private array $validatedData;
@@ -36,6 +37,7 @@ class CreateVirtualAccount
             return $this
                 ->validateRequest()
                 ->setTrackingReference()
+                ->setInternationalPhoneNumber()
                 ->setRole()
                 ->setPassword()
                 ->setVerificationDetails()
@@ -61,6 +63,12 @@ class CreateVirtualAccount
         }else {
             abort(403, 'unable to create kuda account');
         }
+        return $this;
+    }
+
+    private function setInternationalPhoneNumber()
+    {
+        $this->validatedData['phone'] = $this->getInternationalNumber($this->validatedData['phone']);
         return $this;
     }
 
