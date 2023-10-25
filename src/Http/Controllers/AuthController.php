@@ -62,7 +62,7 @@ class AuthController extends Controller
      */
     public function verifyAccount(Request $request)
     {
-        return (new VerifyAccount(['verification_token' => $request->get('token')]))->execute();
+        return (new VerifyAccount(['verification_token' => $request->get('verification_token')]))->execute();
     }
 
     /**
