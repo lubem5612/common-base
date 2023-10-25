@@ -32,7 +32,7 @@ class PasswordController extends Controller
      */
     public function forgotPassword(Request $request)
     {
-        return (new ForgotPassword(['email' => $request->get('email')]))->execute();
+        return (new ForgotPassword(['phone' => $request->get('phone')]))->execute();
     }
 
     /**

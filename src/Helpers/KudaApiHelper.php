@@ -12,10 +12,10 @@ use Illuminate\Support\Str;
 class KudaApiHelper
 {
     use ValidationHelper, ResponseHelper;
-    private string $reference;
-    private string $accessToken;
-    private array $validatedData;
-    private array $request;
+    private ?string $reference;
+    private ?string $accessToken;
+    private ?array $validatedData;
+    private ?array $request;
     private $kudaResponse = null;
     private $kudaStatus = false;
     private $kudaMessage = '';

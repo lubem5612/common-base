@@ -51,7 +51,7 @@ class AuthController extends Controller
      */
     public function resendToken(Request $request)
     {
-        return (new ResendToken(['email' => $request->get('email')]))->execute();
+        return (new ResendToken(['phone' => $request->get('phone')]))->execute();
     }
 
     /**

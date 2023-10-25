@@ -11,12 +11,16 @@ trait PhoneHelper
     private function getInternationalNumber($phone)
     {
         if (Str::startsWith($phone, '0')) {
-            return '+234'.$phone;
+            return '+234'.ltrim($phone, '0');
         }else {
-            $countPlus = substr_count($phone, '+234');
-            $offset = $countPlus * 4;
-            $phoneFormatted = substr($phone, $offset);
-            return Str::start($phoneFormatted, '+234');
+            if (Str::startsWith($phone, '234')) {
+                return '+'.$phone;
+            }else {
+                $countPlus = substr_count($phone, '+234');
+                $offset = $countPlus * 4;
+                $phoneFormatted = substr($phone, $offset);
+                return Str::start($phoneFormatted, '+234');
+            }
         }
     }
 
