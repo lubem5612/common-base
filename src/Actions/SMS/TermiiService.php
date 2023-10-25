@@ -64,7 +64,7 @@ class TermiiService
 
     private function sendResponse()
     {
-        if ( array_key_exists('message', $this->response) && str_contains(strtolower($this->response['message']), 'success') ) {
+        if ( is_array($this->response) && array_key_exists('message', $this->response) && str_contains(strtolower($this->response['message']), 'success') ) {
             return $this->sendSuccess($this->response, 'message sent successfully');
         }else {
             return $this->sendError('failed in sending message', $this->response);
