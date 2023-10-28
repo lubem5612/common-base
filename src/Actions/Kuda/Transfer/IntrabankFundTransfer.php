@@ -80,8 +80,8 @@ class IntrabankFundTransfer extends Action
     {
         $this->validatedData = $this->validate($this->request, [
             'beneficiary_user_id' => 'required|exists:users,id',
-//            'amount' => "required|numeric|gt:0|lte:{$this->withdrawal->currentLimit()}",
-            'amount' => "required|numeric|gt:0",
+            'amount' => "required|numeric|gt:0|lte:{$this->withdrawal->currentLimit()}",
+//            'amount' => "required|numeric|gt:0",
             'narration' => "nullable|string"
         ]);
         return $this;

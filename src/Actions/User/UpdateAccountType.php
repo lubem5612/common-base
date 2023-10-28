@@ -36,7 +36,8 @@ class UpdateAccountType extends Action
     {
         $this->user->update([
             'account_type' => $this->validatedData['account_type'],
-            'withdrawal_limit' => config('commonbase.withdrawal_limits')[$this->validatedData['account_type']]
+            'withdrawal_limit' => config('commonbase.withdrawal_limits')[$this->validatedData['account_type']],
+            'account_status' => 'verified'
         ]);
 
         return $this->sendSuccess(null, 'account type updated');

@@ -53,7 +53,7 @@ class VerifyTransactionPin extends Action
     {
         $this->validatedData = $this->validate($this->request, [
             'user_id' => 'required|exists:users,id',
-            'transaction_pin' => 'required|between:1000,9999',
+            'transaction_pin' => 'required|integer|digits:4',
         ]);
 
         return $this;

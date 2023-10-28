@@ -27,13 +27,12 @@ class ResendToken extends Action
     public function execute()
     {
         try {
-            return $this
-                ->validateRequest()
-                ->setUser()
-                ->setToken()
-                ->saveToken()
-                ->sendNotification()
-                ->sendSuccess(null, 'token resend successfully');
+            $this->validateRequest();
+            $this->setUser();
+            $this->setToken();
+            $this->saveToken();
+            $this->sendNotification();
+            return $this->sendSuccess(null, 'token resend successfully');
         }catch (\Exception $exception) {
             return $this->sendServerError($exception);
         }
@@ -42,13 +41,12 @@ class ResendToken extends Action
     private function setToken()
     {
         $this->token = rand(100000, 999999);
-        return $this;
     }
 
     private function setUser()
     {
         $this->user = User::query()->where('phone', $this->validatedInput['phone'])->first();
-        return $this;
+        return $this->user;
     }
 
     private function saveToken()
@@ -56,10 +54,9 @@ class ResendToken extends Action
         abort_if($this->user->is_verified=='yes', 403, 'user already verified');
 
         $this->user->update([
-            "token" => $this->token,
-            "email_verified_at" => Carbon::now()
+            "verification_token" => $this->token,
+            "account_verified_at" => Carbon::now()
         ]);
-        return $this;
     }
 
     private function sendNotification()
@@ -70,8 +67,6 @@ class ResendToken extends Action
         } catch (\Exception $exception) {
             Log::error($exception->getTraceAsString());
         }
-
-        return $this;
     }
 
     private function validateRequest()
@@ -80,6 +75,5 @@ class ResendToken extends Action
             "phone" => 'required|string'
         ]);
         $this->validatedInput['phone'] = $this->getInternationalNumber($this->validatedInput['phone']);
-        return $this;
     }
 }

@@ -51,14 +51,12 @@ class TermiiService
 
     private function makeApiCall()
     {
-        if (!app()->environment(['testing', 'local'])) {
-            $this->response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$this->apiKey,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'Cache-Control' => 'no-cache',
-            ])->withoutVerifying()->post($this->baseUrl, $this->validatedData)->json();
-        }
+        $this->response = Http::withHeaders([
+            'Authorization' => 'Bearer '.$this->apiKey,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'Cache-Control' => 'no-cache',
+        ])->withoutVerifying()->post($this->baseUrl, $this->validatedData)->json();
         return $this;
     }
 

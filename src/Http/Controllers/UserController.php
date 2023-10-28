@@ -86,7 +86,7 @@ class UserController extends Controller
      */
     public function setPin(Request $request)
     {
-        return (new SetTransactionPin(['transaction_pin' => $request->get('pin')]))->execute();
+        return (new SetTransactionPin(['transaction_pin' => $request->get('transaction_pin')]))->execute();
     }
 
     /**

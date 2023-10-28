@@ -17,7 +17,7 @@ trait SessionHelper
         Cache::store('file')->increment($user_id);
     }
 
-    protected function getSession($user_id) : int
+    protected function getSession($user_id)
     {
         return Cache::store('file')->get($user_id);
     }
