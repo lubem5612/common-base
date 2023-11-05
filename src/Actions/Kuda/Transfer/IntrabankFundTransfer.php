@@ -4,6 +4,7 @@
 namespace Transave\CommonBase\Actions\Kuda\Transfer;
 
 
+use Illuminate\Support\Arr;
 use Transave\CommonBase\Actions\Action;
 use Transave\CommonBase\Helpers\WithdrawalLimitHelper;
 use Transave\CommonBase\Http\Models\User;
@@ -13,12 +14,18 @@ class IntrabankFundTransfer extends Action
     private array $request;
     private array $validatedData;
     private $withdrawal, $nameEnquiry;
-    private User $beneficiary;
+    private ?User $beneficiary;
+    private $sender;
 
     public function __construct(array $request)
     {
         $this->request = $request;
-        $this->withdrawal = new WithdrawalLimitHelper(auth()->id());
+        if (Arr::exists($request, 'sender_id') && $this->request['sender_id']) {
+            $this->sender = User::query()->find($this->request['sender_id']);
+        }else {
+            $this->sender = auth()->user();
+        }
+        $this->withdrawal = new WithdrawalLimitHelper($this->sender->id);
     }
 
     public function handle()
@@ -34,7 +41,7 @@ class IntrabankFundTransfer extends Action
     private function transferFund()
     {
         $response = (new VirtualAccountFundTransfer([
-            "user_id" => auth()->id(),
+            "user_id" => $this->sender->id,
             "beneficiary_account_number" => $this->beneficiary->account_number,
             "beneficiary_bank_code" => config('commonbase.kuda.bank_code'),
             "beneficiary_name" => $this->nameEnquiry['data']['beneficiaryName'],
@@ -54,7 +61,7 @@ class IntrabankFundTransfer extends Action
         $this->nameEnquiry = (new NameEnquiry([
             "beneficiary_account_number" => $this->beneficiary->account_number,
             "beneficiary_bank_code" => config('commonbase.kuda.bank_code'),
-            "user_id" => auth()->id(),
+            "user_id" => $this->sender->id,
         ]))->execute();
 
         abort_unless($this->nameEnquiry['success'], 403, 'cant retrieve beneficiary account');
@@ -71,7 +78,7 @@ class IntrabankFundTransfer extends Action
     private function setNarration()
     {
         if (!array_key_exists('narration', $this->validatedData)) {
-            $this->validatedData['narration'] = "Wallet transfer from ".auth()->user()->first_name." to {$this->beneficiary->first_name}";
+            $this->validatedData['narration'] = "Wallet transfer from ".$this->sender->first_name." to {$this->beneficiary->first_name}";
         }
         return $this;
     }
@@ -80,6 +87,7 @@ class IntrabankFundTransfer extends Action
     {
         $this->validatedData = $this->validate($this->request, [
             'beneficiary_user_id' => 'required|exists:users,id',
+            'sender_user_id' => 'nullable|exists:users,id',
             'amount' => "required|numeric|gt:0|lte:{$this->withdrawal->currentLimit()}",
 //            'amount' => "required|numeric|gt:0",
             'narration' => "nullable|string"
