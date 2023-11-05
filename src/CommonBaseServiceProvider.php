@@ -78,6 +78,10 @@ class CommonBaseServiceProvider extends ServiceProvider
             __DIR__ . '/../config/commonbase.php' => config_path('commonbase.php'),
         ], 'commbase-config');
 
+        $this->publishes([
+            __DIR__ . '/../config/endpoints.php' => config_path('endpoints.php'),
+        ], 'commbase-endpoints');
+
         // Publishing migrations
         $this->publishes([
             __DIR__.'/../database/migrations' => database_path('migrations'),
