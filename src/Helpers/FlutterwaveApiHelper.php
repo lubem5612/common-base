@@ -5,6 +5,7 @@ namespace Transave\CommonBase\Helpers;
 
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Transave\CommonBase\Actions\Action;
 
 class FlutterwaveApiHelper extends Action
@@ -16,11 +17,21 @@ class FlutterwaveApiHelper extends Action
         $this->request = $request;
     }
 
-    public function handle()
+    public function execute()
     {
-        $this->validateRequest();
-        $this->initiateTransfer();
-        return $this->buildResponse();
+        try {
+            $this->validateRequest();
+            $this->initiateTransfer();
+            return $this->buildResponse();
+        }catch (\Exception $exception) {
+            Log::error($exception);
+            return [
+                "success" => false,
+                "message" => $exception->getMessage(),
+                "data" => [],
+                "errors" => $exception->getTrace()
+            ];
+        }
     }
 
     private function initiateTransfer()

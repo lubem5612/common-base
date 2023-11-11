@@ -4,15 +4,18 @@
 namespace Transave\CommonBase\Actions\Flutterwave;
 
 
+use Illuminate\Support\Arr;
 use Transave\CommonBase\Actions\Action;
 use Transave\CommonBase\Actions\DebitCard\CreateDebitCard;
 use Transave\CommonBase\Helpers\FlutterwaveApiHelper;
 use Transave\CommonBase\Helpers\SessionHelper;
+use Transave\CommonBase\Http\Models\User;
 
 class InitiateCardTransaction extends Action
 {
     use SessionHelper;
     private $request, $validatedData, $chargeCard;
+    private $user;
 
     public function __construct(array $request)
     {
@@ -23,6 +26,7 @@ class InitiateCardTransaction extends Action
     {
         return $this
             ->validateRequest()
+            ->setUser()
             ->setReference()
             ->setEmail()
             ->setCurrency()
@@ -42,6 +46,16 @@ class InitiateCardTransaction extends Action
         return $this;
     }
 
+    private function setUser()
+    {
+        if (Arr::exists($this->validatedData, 'user_id') && $this->validatedData['user_id']) {
+            $this->user = User::query()->find($this->validatedData['user_id']);
+        }else {
+            $this->user = auth()->user();
+        }
+        return $this;
+    }
+
     private function setCurrency()
     {
         if (!array_key_exists('currency', $this->validatedData)) {
@@ -58,14 +72,14 @@ class InitiateCardTransaction extends Action
 
     private function setRedirectUrl()
     {
-        $this->validatedData['redirect_url'] = route('flutterwave.redirect', ['id' => auth()->id()]);
+        $this->validatedData['redirect_url'] = route('flutterwave.redirect', ['id' => $this->user->id]);
         return $this;
     }
 
     private function setEmail()
     {
         if (!array_key_exists('email', $this->validatedData)) {
-            if (auth()->check()) $this->validatedData['email'] = auth()->user()->email;
+            $this->validatedData['email'] = $this->user->email;
         }
         return $this;
     }
@@ -73,7 +87,7 @@ class InitiateCardTransaction extends Action
     private function tokenizeCard()
     {
         $response = (new CreateDebitCard([
-            'user_id' => auth()->id(),
+            'user_id' => $this->user->id,
             'first_digits' => $this->chargeCard['data']['card']['first_6digits'],
             'last_digits' => $this->chargeCard['data']['card']['last_4digits'],
             'issuer' => $this->chargeCard['data']['card']['issuer'],
@@ -100,6 +114,7 @@ class InitiateCardTransaction extends Action
             "amount" => "required|numeric|gt:0",
             "fullname" => "required|string",
             "email" => "nullable",
+            "user_id" => "nullable"
         ]);
         return $this;
     }
