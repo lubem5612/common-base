@@ -4,6 +4,7 @@
 namespace Transave\CommonBase\Actions\Flutterwave;
 
 
+use Illuminate\Support\Arr;
 use Transave\CommonBase\Actions\Action;
 use Transave\CommonBase\Helpers\FlutterwaveApiHelper;
 
@@ -34,9 +35,11 @@ class ValidateCharge extends Action
     {
         $this->validatedData = $this->validate($this->request, [
             "otp" => "required|size:6",
-            "flw_ref" => "required|string",
+            "merchant_ref" => "required|string",
             "type" => "nullable|in:card,account"
         ]);
+        $this->validatedData['flw_ref'] = $this->validatedData['merchant_ref'];
+        $this->validatedData = Arr::except($this->validatedData, ['merchant_ref']);
         return $this;
     }
 }

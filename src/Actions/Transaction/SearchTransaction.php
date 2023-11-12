@@ -11,7 +11,7 @@ class SearchTransaction
 {
     use SearchHelper;
 
-    public function searchTerms(): SearchHelper
+    public function searchTerms()
     {
         $search = $this->searchParam;
         $this->queryBuilder->where(function (Builder $builder) use($search){

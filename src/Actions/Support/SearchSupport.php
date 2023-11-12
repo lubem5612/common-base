@@ -10,7 +10,7 @@ class SearchSupport
 {
     use SearchHelper;
 
-    public function searchTerms() : SearchHelper
+    public function searchTerms()
     {
         $search = $this->searchParam;
         $user = request()->query('user_id');

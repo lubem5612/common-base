@@ -11,7 +11,7 @@ class SearchUsers
 {
     use SearchHelper;
 
-    public function searchTerms(): SearchHelper
+    public function searchTerms()
     {
         $userType = request()->query('role');
         $account = request()->query('account_number');

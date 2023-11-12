@@ -20,8 +20,8 @@ class IntrabankFundTransfer extends Action
     public function __construct(array $request)
     {
         $this->request = $request;
-        if (Arr::exists($request, 'sender_id') && $this->request['sender_id']) {
-            $this->sender = User::query()->find($this->request['sender_id']);
+        if (Arr::exists($request, 'sender_user_id') && $this->request['sender_user_id']) {
+            $this->sender = User::query()->find($this->request['sender_user_id']);
         }else {
             $this->sender = auth()->user();
         }
@@ -89,7 +89,6 @@ class IntrabankFundTransfer extends Action
             'beneficiary_user_id' => 'required|exists:users,id',
             'sender_user_id' => 'nullable|exists:users,id',
             'amount' => "required|numeric|gt:0|lte:{$this->withdrawal->currentLimit()}",
-//            'amount' => "required|numeric|gt:0",
             'narration' => "nullable|string"
         ]);
         return $this;
