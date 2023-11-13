@@ -15,7 +15,6 @@ use Laravel\Sanctum\HasApiTokens;
 use Transave\CommonBase\Actions\Kuda\Account\MainAccountBalance;
 use Transave\CommonBase\Actions\Kuda\Account\VirtualAccountBalance;
 use Transave\CommonBase\Database\Factories\UserFactory;
-use Transave\CommonBase\Helpers\KycHelper;
 use Transave\CommonBase\Helpers\UuidHelper;
 
 class User extends Authenticatable
@@ -40,7 +39,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'wallet', 'account'
+        'wallet'
     ];
 
     public function kyc() : HasOne
@@ -69,17 +68,17 @@ class User extends Authenticatable
         return null;
     }
 
-    public function getAccountAttribute()
-    {
-        if (!in_array($this->role, ['admin', 'super', 'support'])) {
-            $response = (new KycHelper(['user_id' => $this->id]))->execute();
-            if ($response['success']){
-                return $response['data'];
-            }
-        }
-
-        return null;
-    }
+//    public function getAccountAttribute()
+//    {
+//        if (!in_array($this->role, ['admin', 'super', 'support'])) {
+//            $response = (new KycHelper(['user_id' => $this->id]))->execute();
+//            if ($response['success']){
+//                return $response['data'];
+//            }
+//        }
+//
+//        return null;
+//    }
 
     public function debitCards() : HasMany
     {

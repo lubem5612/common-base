@@ -29,6 +29,7 @@ Route::group(['as' => 'transave.'], function () {
     //users routes
     Route::group(['prefix' => 'users', 'middleware' => 'auth:sanctum'], function () {
         Route::get('/', [ UserController::class, 'index'])->name('users.index');
+        Route::get('/{id}/kyc', [ UserController::class, 'kyc'])->name('user.kyc');
         Route::patch('{id}/verify-password', [ PasswordController::class, 'verifyPassword'])->name('verify.password');
         Route::patch('{id}/account-type', [ UserController::class, 'updateAccountType'])->name('update.account-type');
         Route::patch('{id}/account-status', [ UserController::class, 'updateAccountStatus'])->name('update.account-status');

@@ -9,17 +9,18 @@ use Transave\CommonBase\Actions\Kuda\Account\UpdateVirtualAccount;
 use Transave\CommonBase\Actions\User\ChangeEmail;
 use Transave\CommonBase\Actions\User\ChangePassword;
 use Transave\CommonBase\Actions\User\DeleteAccount;
+use Transave\CommonBase\Actions\User\GetUserKyc;
 use Transave\CommonBase\Actions\User\RestoreAccount;
 use Transave\CommonBase\Actions\User\SearchUsers;
 use Transave\CommonBase\Actions\User\SetTransactionPin;
 use Transave\CommonBase\Actions\User\UpdateAccountStatus;
 use Transave\CommonBase\Actions\User\UpdateAccountType;
 use Transave\CommonBase\Actions\User\VerifyTransactionPin;
+use Transave\CommonBase\Helpers\KycHelper;
 use Transave\CommonBase\Http\Models\User;
 
 class UserController extends Controller
 {
-
     /**
      * UserController constructor.
      */
@@ -154,5 +155,14 @@ class UserController extends Controller
     public function restore(Request $request)
     {
         return (new RestoreAccount(['user_id' => $request->get('user_id')]))->execute();
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function kyc($id)
+    {
+        return (new GetUserKyc(['user_id' => $id]))->execute();
     }
 }
