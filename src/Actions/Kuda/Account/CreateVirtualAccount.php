@@ -22,11 +22,11 @@ class CreateVirtualAccount
 {
     use ValidationHelper, ResponseHelper, PhoneHelper;
 
-    private array $request;
-    private array $validatedData;
-    private array $kudaData;
+    private $request;
+    private $validatedData;
+    private $kudaData;
     private $response_dump = [];
-    private User $user;
+    private $user;
 
     public function __construct(array $request)
     {
@@ -48,7 +48,7 @@ class CreateVirtualAccount
             $this->setMiddleName();
             $this->fetchAccountIfExist();
             $this->createVirtualAccount();
-            $this->createWalletAndKyc();
+            $this->createKyc();
             return $this->sendNotification();
         }catch (\Exception $e) {
             $this->createOrUpdateFailedAccount();
@@ -146,7 +146,7 @@ class CreateVirtualAccount
         return $this;
     }
 
-    private function createWalletAndKyc()
+    private function createKyc()
     {
         Kyc::query()->create(['user_id' => $this->validatedData['id']]);
         return $this;
@@ -154,10 +154,14 @@ class CreateVirtualAccount
 
     private function sendNotification()
     {
-        $message = "Hello {$this->user->first_name}, use the code  {$this->user->verification_token} to activate your account. From Transave";
-        (new TermiiService(['to' => $this->user->phone, 'sms' => $message]))->execute();
+        $firstName = $this->validatedData['first_name'];
+        $token = $this->validatedData['verification_token'];
+        $phone = $this->validatedData['phone'];
 
-        return $this->sendSuccess($this->user, 'account created successfully');
+        $message = "Hello {$firstName}, use the code  {$token} to activate your account. From Transave";
+        (new TermiiService(['to' => $phone, 'sms' => $message]))->execute();
+
+        return $this->sendSuccess(User::query()->find($this->validatedData['id']), 'account created successfully');
     }
 
     private function setKudaData()
