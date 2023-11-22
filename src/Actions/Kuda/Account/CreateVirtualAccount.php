@@ -34,20 +34,19 @@ class CreateVirtualAccount
     public function execute()
     {
         try {
-            return $this
-                ->validateRequest()
-                ->setTrackingReference()
-                ->setInternationalPhoneNumber()
-                ->setRole()
-                ->setPassword()
-                ->setVerificationDetails()
-                ->setAccountDefaults()
-                ->setKudaData()
-                ->setBusinessName()
-                ->setMiddleName()
-                ->createVirtualAccount()
-                ->createWalletAndKyc()
-                ->sendNotification();
+            $this->validateRequest();
+            $this->setTrackingReference();
+            $this->setInternationalPhoneNumber();
+            $this->setRole();
+            $this->setPassword();
+            $this->setVerificationDetails();
+            $this->setAccountDefaults();
+            $this->setKudaData();
+            $this->setBusinessName();
+            $this->setMiddleName();
+            $this->createVirtualAccount();
+            $this->createWalletAndKyc();
+            return $this->sendNotification();
         }catch (\Exception $e) {
             return $this->sendServerError($e);
         }

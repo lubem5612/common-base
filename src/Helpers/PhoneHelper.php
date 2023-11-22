@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 trait PhoneHelper
 {
-    private function getInternationalNumber($phone)
+    public function getInternationalNumber($phone)
     {
         if (Str::startsWith($phone, '0')) {
             return '+234'.ltrim($phone, '0');
@@ -28,5 +28,12 @@ trait PhoneHelper
     {
         $intFormat = $this->getInternationalNumber($phone);
         return Str::after($intFormat, '+');
+    }
+
+    public function localLocal($phone)
+    {
+        $intFormat = $this->getInternationalNumber($phone);
+        $format = Str::after($intFormat, '+234');
+        return Str::start($format, '0');
     }
 }
