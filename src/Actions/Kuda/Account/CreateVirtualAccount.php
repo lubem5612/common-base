@@ -125,7 +125,7 @@ class CreateVirtualAccount
         $this->kudaData = [
             "trackingReference" => $this->validatedData['id'],
             "email"             => $this->validatedData['email'],
-            "phoneNumber"       => $this->validatedData['phone'],
+            "phoneNumber"       => $this->localLocal($this->validatedData['phone']),
             "lastName"          => $this->validatedData['last_name'],
             "firstName"         => $this->validatedData['first_name']
         ];
