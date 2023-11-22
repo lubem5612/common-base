@@ -14,6 +14,7 @@ use Transave\CommonBase\Helpers\KudaApiHelper;
 use Transave\CommonBase\Helpers\PhoneHelper;
 use Transave\CommonBase\Helpers\ResponseHelper;
 use Transave\CommonBase\Helpers\ValidationHelper;
+use Transave\CommonBase\Http\Models\FailedAccount;
 use Transave\CommonBase\Http\Models\Kyc;
 use Transave\CommonBase\Http\Models\User;
 
@@ -24,6 +25,7 @@ class CreateVirtualAccount
     private array $request;
     private array $validatedData;
     private array $kudaData;
+    private $response_dump = [];
     private User $user;
 
     public function __construct(array $request)
@@ -44,22 +46,62 @@ class CreateVirtualAccount
             $this->setKudaData();
             $this->setBusinessName();
             $this->setMiddleName();
+            $this->fetchAccountIfExist();
             $this->createVirtualAccount();
             $this->createWalletAndKyc();
             return $this->sendNotification();
         }catch (\Exception $e) {
+            $this->createOrUpdateFailedAccount();
             return $this->sendServerError($e);
+        }
+    }
+
+    private function fetchAccountIfExist()
+    {
+        $failedAccount = FailedAccount::query()->where('email', $this->validatedData['email'])->first();
+        if (!empty($failedAccount)) {
+            $data = ['trackingReference' => $failedAccount->reference_id];
+
+            $response = (new KudaApiHelper(['serviceType' => 'ADMIN_RETRIEVE_SINGLE_VIRTUAL_ACCOUNT', 'data' => $data]))->execute();
+            if (User::query()->where('id', $failedAccount->reference_id)->doesntExist()) {
+                if ($response['success']) {
+                    DB::table('users')->insert([
+                        'id' => $failedAccount->reference_id,
+                        'first_name' => $response['data']['account']['firstName'],
+                        'last_name' => $response['data']['account']['lastName'],
+                        'email' => $response['data']['account']['email'],
+                        'phone' => $response['data']['account']['phoneNumber'],
+                        'account_number' => $response['data']['account']['accountNumber'],
+                        'role' => 'customer',
+                        'password' => bcrypt($this->validatedData['password']),
+                        'verification_token' => rand(100000, 999999),
+                        'account_verified_at' => Carbon::now()->addMinutes(15),
+                        'is_verified' => "no",
+                        'withdrawal_limit' => 0,
+                        'account_type' => 'ordinary',
+                        'account_status' => 'unverified',
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ]);
+
+                }
+            }
         }
     }
 
     private function createVirtualAccount()
     {
+        if (User::query()->where('email', $this->validatedData['email'])->exists()) {
+            abort(403, 'email has been taken');
+        }
         $response = (new KudaApiHelper(['serviceType' => 'ADMIN_CREATE_VIRTUAL_ACCOUNT', 'data' => $this->kudaData]))->execute();
+        $this->response_dump = $response;
         if ($response['success'] && $response['data']['accountNumber']) {
             $this->validatedData['account_number'] = $response['data']['accountNumber'];
 
             DB::table('users')->insert($this->validatedData);
         }else {
+            $this->createOrUpdateFailedAccount();
             abort(403, 'unable to create kuda account');
         }
         return $this;
@@ -106,7 +148,11 @@ class CreateVirtualAccount
 
     private function createWalletAndKyc()
     {
-        $this->user = User::query()->find($this->validatedData['id']);
+        $this->user = User::query()->where('email', $this->validatedData['email'])->first();
+        if (!empty($this->user)) {
+            $this->createOrUpdateFailedAccount();
+            abort(500, 'unable to get user details');
+        }
         Kyc::query()->create(['user_id' => $this->user->id]);
 
         return $this;
@@ -153,6 +199,22 @@ class CreateVirtualAccount
     {
         $this->validatedData['password'] = bcrypt($this->validatedData['password']);
         return $this;
+    }
+
+    private function createOrUpdateFailedAccount()
+    {
+        FailedAccount::query()->updateOrCreate(
+            [
+                'email' => $this->validatedData['email']
+            ],
+            [
+                'reference_id' => $this->validatedData['id'],
+                'email' => $this->validatedData['email'],
+                'phone' => $this->validatedData['phone'],
+                'data_dump' => json_encode($this->validatedData),
+                'response' => json_encode($this->response_dump)
+            ]
+        );
     }
 
     private function validateRequest()
