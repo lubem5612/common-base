@@ -130,7 +130,10 @@ class KycHelper
     private function setUserAndKyc()
     {
         $this->user = User::query()->find($this->validatedData['user_id']);
-        $this->kyc = $this->user->kyc;
+        $this->kyc = $this?->user?->kyc;
+        if (empty($this->kyc)) {
+            Kyc::query()->create(['user_id' => $this->user->id]);
+        }
         return $this;
     }
 
