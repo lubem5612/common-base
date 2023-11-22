@@ -148,13 +148,7 @@ class CreateVirtualAccount
 
     private function createWalletAndKyc()
     {
-        $this->user = User::query()->where('email', $this->validatedData['email'])->first();
-        if (!empty($this->user)) {
-            $this->createOrUpdateFailedAccount();
-            abort(500, 'unable to get user details');
-        }
-        Kyc::query()->create(['user_id' => $this->user->id]);
-
+        Kyc::query()->create(['user_id' => $this->validatedData['id']]);
         return $this;
     }
 
