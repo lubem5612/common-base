@@ -29,6 +29,7 @@ class InitiateCardTransaction extends Action
             ->setUser()
             ->setReference()
             ->setEmail()
+            ->setUserName()
             ->setCurrency()
             ->setRedirectUrl()
             ->chargeCard()
@@ -80,6 +81,14 @@ class InitiateCardTransaction extends Action
     {
         if (!array_key_exists('email', $this->validatedData)) {
             $this->validatedData['email'] = $this->user->email;
+        }
+        return $this;
+    }
+
+    private function setUserName()
+    {
+        if (!array_key_exists('fullname', $this->validatedData)) {
+            $this->validatedData['fullname'] = $this->user->first_name.' '.$this->user->last_name;
         }
         return $this;
     }
