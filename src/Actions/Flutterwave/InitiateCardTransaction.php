@@ -119,8 +119,8 @@ class InitiateCardTransaction extends Action
             "cvv" => "required|string|size:3",
             "expiry_month" => "required|string|size:2",
             "expiry_year" => "required|string|size:2",
-            "currency" => "nullable",
             "amount" => "required|numeric|gt:0",
+            "currency" => "nullable",
             "fullname" => "nullable|string",
             "email" => "nullable",
             "user_id" => "nullable"
