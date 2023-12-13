@@ -22,7 +22,7 @@ class FlutterwaveApiHelper extends Action
         try {
             $this->validateRequest();
             $this->initiateTransfer();
-            return $this->buildResponse();
+            return $this->processResponse();
         }catch (\Exception $exception) {
             Log::error($exception);
             return [
@@ -69,7 +69,7 @@ class FlutterwaveApiHelper extends Action
         return $this;
     }
 
-    private function buildResponse()
+    private function processResponse()
     {
         if ($this->response['status'] == "success") {
             return [
