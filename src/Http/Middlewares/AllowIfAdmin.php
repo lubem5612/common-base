@@ -11,8 +11,8 @@ class AllowIfAdmin
     use ResponseHelper;
     public function handle(Request $request, Closure $next)
     {
-        $user = $request->user();
-        if (empty($user) || $user->role!='admin') {
+        $user = auth('sanctum')->user();
+        if (empty($user) || in_array($user->role, ['admin', 'superadmin', 'support'])) {
             return $this->sendError('you must log in as admin to proceed');
         }
 
