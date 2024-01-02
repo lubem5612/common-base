@@ -40,9 +40,9 @@ return [
     ],
 
     'flutterwave' => [
-        'secret_key'        => env('FLUTTERWAVE_SECRET_KEY', ''),
-        'public_key'        => env('FLUTTERWAVE_PUBLIC_KEY', ''),
-        'redirect_url'      => env('FLUTTERWAVE_REDIRECT_URL', 'https://transave.com.ng/dashboard'),
+        'secret_key'        => env('SECRET_KEY', ''),
+        'public_key'        => env('PUBLIC_KEY', ''),
+        'redirect_url'      => env('REDIRECT_URL', 'https://transave.com.ng/dashboard'),
         'base_url'          => env('FLUTTERWAVE_BASE_URL', 'https://api.flutterwave.com/v3')
     ],
 
