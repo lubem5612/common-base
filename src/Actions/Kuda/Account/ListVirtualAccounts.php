@@ -54,8 +54,8 @@ class ListVirtualAccounts
     private function validateRequest()
     {
         $this->validatedData = $this->validate($this->request, [
-            "PageSize" => 'nullable|integer',
-            "PageNumber" => 'nullable|integer',
+            "pageSize" => 'nullable',
+            "pageNumber" => 'nullable',
         ]);
         return $this;
     }
