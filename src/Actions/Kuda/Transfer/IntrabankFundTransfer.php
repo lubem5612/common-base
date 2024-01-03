@@ -56,10 +56,13 @@ class IntrabankFundTransfer extends Action
 
     private function getBeneficiaryAccount()
     {
-        if (array_key_exists('beneficiary_user_id', $this->validatedData)) {
+        if (array_key_exists('beneficiary_user_id', $this->validatedData) && $this->validatedData['beneficiary_user_id']) {
             $this->beneficiary = User::query()->find($this->validatedData['beneficiary_user_id']);
-        }else {
+        }elseif (array_key_exists('beneficiary_account_number', $this->validatedData) && $this->validatedData['beneficiary_account_number']) {
             $this->beneficiary = User::query()->where('account_number', $this->validatedData['beneficiary_account_number'])->first();
+        }else {
+            $this->beneficiary = null;
+            abort(401, 'beneficiary not found');
         }
 
         $this->nameEnquiry = (new NameEnquiry([
@@ -91,7 +94,7 @@ class IntrabankFundTransfer extends Action
     {
         $this->validatedData = $this->validate($this->request, [
             'beneficiary_user_id' => 'nullable|exists:users,id',
-            'beneficiary_account_number' => 'required_if:beneficiary_user_id,null',
+            'beneficiary_account_number' => 'nullable|exists:users,account_number',
             'sender_user_id' => 'nullable|exists:users,id',
             'amount' => "required|numeric|gt:0|lte:{$this->withdrawal->currentLimit()}",
             'narration' => "nullable|string"
