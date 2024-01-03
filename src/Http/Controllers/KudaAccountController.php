@@ -153,7 +153,7 @@ class KudaAccountController extends Controller
     /**
      * Intra Bank Wallet to Wallet Transfer
      *
-     * @bodyParam beneficiary_user_id string required The primary key User ID. For test, use e5951615-3f2c-4903-962f-d2cfdabd10cb
+     * @bodyParam beneficiary_account_number int required The beneficiary account number. For test, use 2504193714
      * @bodyParam amount int required The amount in naira to send
      * @bodyParam narration string required The description of the transaction
      * @response {
@@ -172,6 +172,7 @@ class KudaAccountController extends Controller
     {
         $response = (new IntrabankFundTransfer([
             'beneficiary_user_id' => $request->get('beneficiary_user_id'),
+            'beneficiary_account_number' => $request->get('beneficiary_account_number'),
             'amount' => $request->get('amount'),
             'narration' => $request->get('narration')
         ]))->execute();
