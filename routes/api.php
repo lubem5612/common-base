@@ -7,6 +7,7 @@ use Transave\CommonBase\Http\Controllers\ConfigController;
 use Transave\CommonBase\Http\Controllers\DebitCardController;
 use Transave\CommonBase\Http\Controllers\FlutterwaveController;
 use Transave\CommonBase\Http\Controllers\KudaAccountController;
+use Transave\CommonBase\Http\Controllers\KudaUserController;
 use Transave\CommonBase\Http\Controllers\PasswordController;
 use Transave\CommonBase\Http\Controllers\ResourceController;
 use Transave\CommonBase\Http\Controllers\SupportController;
@@ -92,6 +93,12 @@ Route::group(['as' => 'transave.'], function () {
             Route::post('virtual-account', [KudaAccountController::class, 'virtualAccountTransfer'])->name('virtual-account');
             Route::post('main-account', [KudaAccountController::class, 'mainAccountTransfer'])->name('main-account');
             Route::post('wallet', [KudaAccountController::class, 'walletTransfer'])->name('wallet-transfer');
+        });
+        Route::prefix('accounts')->group(function() {
+            Route::get('/', [KudaUserController::class, 'listVirtualAccount'])->name('listing');
+            Route::get('/main-balance', [KudaUserController::class, 'getMainAccountBalance'])->name('main-balance');
+            Route::get('/{id}', [KudaUserController::class, 'getVirtualAccountDetails'])->name('virtual-details');
+            Route::get('/{id}/balance', [KudaUserController::class, 'getWalletBalance'])->name('main-balance');
         });
         Route::post('webhook', [KudaAccountController::class, 'webhook'])->name('webhook');
     });
