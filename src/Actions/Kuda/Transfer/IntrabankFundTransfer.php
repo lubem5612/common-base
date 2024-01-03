@@ -32,9 +32,9 @@ class IntrabankFundTransfer extends Action
     {
         return $this
             ->validateRequest()
+            ->setNarration()
             ->getBeneficiaryAccount()
             ->checkWalletBalance()
-            ->setNarration()
             ->transferFund();
     }
 
@@ -56,7 +56,11 @@ class IntrabankFundTransfer extends Action
 
     private function getBeneficiaryAccount()
     {
-        $this->beneficiary = User::query()->find($this->validatedData['beneficiary_user_id']);
+        if (array_key_exists('beneficiary_user_id', $this->validatedData)) {
+            $this->beneficiary = User::query()->find($this->validatedData['beneficiary_user_id']);
+        }else {
+            $this->beneficiary = User::query()->where('account_number', $this->validatedData['account_number'])->first();
+        }
 
         $this->nameEnquiry = (new NameEnquiry([
             "beneficiary_account_number" => $this->beneficiary->account_number,
@@ -86,7 +90,8 @@ class IntrabankFundTransfer extends Action
     private function validateRequest()
     {
         $this->validatedData = $this->validate($this->request, [
-            'beneficiary_user_id' => 'required|exists:users,id',
+            'beneficiary_user_id' => 'nullable|exists:users,id',
+            'account_number' => 'required_if:beneficiary_user_id,null',
             'sender_user_id' => 'nullable|exists:users,id',
             'amount' => "required|numeric|gt:0|lte:{$this->withdrawal->currentLimit()}",
             'narration' => "nullable|string"
