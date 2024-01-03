@@ -10,6 +10,11 @@ use Transave\CommonBase\Actions\Kuda\Account\ListVirtualAccounts;
 use Transave\CommonBase\Actions\Kuda\Account\MainAccountBalance;
 use Transave\CommonBase\Actions\Kuda\Account\VirtualAccountBalance;
 
+/**
+ * @group Kuda Users Controller Endpoints
+ *
+ * API routes for handling kuda account users
+ */
 class KudaUserController extends Controller
 {
     /**
