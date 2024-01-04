@@ -23,6 +23,32 @@ class FlutterwaveController extends Controller
 
     }
 
+    /**
+     * Get a listing of Flutterwave banks
+     *
+     * @response {
+     * "success": true,
+     * "message": "Banks fetched successfully",
+     * "data": [
+     * {
+     * "id": 132,
+     * "code": "560",
+     * "name": "Page MFBank"
+     * },
+     * {
+     * "id": 133,
+     * "code": "304",
+     * "name": "Stanbic Mobile Money"
+     * },
+     * {
+     * "id": 2333,
+     * "code": "999999",
+     * "name": "NIP Virtual Bank"
+     * }
+     * ]
+     * }
+     * @return \Illuminate\Http\JsonResponse|FlutterwaveBankList
+     */
     public function bankList()
     {
         $response = (new FlutterwaveBankList(['country' => 'NG']))->execute();

@@ -11,7 +11,7 @@ class AccountVerification
     use ResponseHelper;
     public function handle(Request $request, Closure $next)
     {
-        $user = $request->user();
+        $user = auth('sanctum')->user();
         if (empty($user) || $user->is_verified!='yes' || in_array($user->account_status, ['banned', 'suspended']))
         {
             return $this->sendError('your account is not active');

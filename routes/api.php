@@ -74,17 +74,17 @@ Route::group(['as' => 'transave.'], function () {
     Route::get('config/{endpoint}', [ ConfigController::class, 'index'])->name('config.index');
 
     //flutterwave routes
-    Route::as('flutterwave.')->prefix('flutterwave')->group(function () {
-        Route::prefix('transfers')->group(function () {
+    Route::as('flutterwave.')->prefix('flutterwave')->group(function() {
+        Route::prefix('transfers')->as('tramsfers.')->group(function() {
             Route::get('bank-list', [FlutterwaveController::class, 'bankList'])->name('bank-list');
             Route::post('bank-charge', [FlutterwaveController::class, 'initiateBankTransfer'])->name('bank-transfer');
             Route::post('card-charge', [FlutterwaveController::class, 'initiateCardTransaction'])->name('card-transaction');
             Route::post('customer-charge', [FlutterwaveController::class, 'chargeReturningCustomer'])->name('customer');
             Route::post('validate-charge', [FlutterwaveController::class, 'validateCharge'])->name('validate');
         });
+
         Route::get('redirect/{id}', [FlutterwaveController::class, 'redirect'])->name('redirect');
     });
-
     //Kuda controller routes
     Route::as('kuda.')->prefix('kuda')->group(function () {
         Route::prefix('transfers')->group(function() {
