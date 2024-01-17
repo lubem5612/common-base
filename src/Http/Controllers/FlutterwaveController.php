@@ -10,6 +10,7 @@ use Transave\CommonBase\Actions\Flutterwave\InitiateBankTransfer;
 use Transave\CommonBase\Actions\Flutterwave\InitiateCardTransaction;
 use Transave\CommonBase\Actions\Flutterwave\TokenizeDebitCard;
 use Transave\CommonBase\Actions\Flutterwave\ValidateCharge;
+use Transave\CommonBase\Actions\Flutterwave\VerifyAndCreateTransaction;
 
 class FlutterwaveController extends Controller
 {
@@ -101,5 +102,8 @@ class FlutterwaveController extends Controller
         return $response;
     }
 
-
+    public function createTransaction(Request $request)
+    {
+        return (new VerifyAndCreateTransaction($request->all()))->execute();
+    }
 }

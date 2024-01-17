@@ -80,8 +80,8 @@ class FlutterwaveApiHelper extends Action
         }else {
             return [
                 "success" => false,
-                "message" => isset($this->response['message'])? isset($this->response['message']) : 'error in making api call',
-                "data" => isset($this->response['data'])? isset($this->response['data']) : [],
+                "message" => isset($this->response['message'])? $this->response['message'] : 'error in making api call',
+                "data" => isset($this->response['data'])? $this->response['data'] : [],
             ];
         }
     }

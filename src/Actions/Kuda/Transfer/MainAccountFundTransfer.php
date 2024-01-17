@@ -41,7 +41,7 @@ class MainAccountFundTransfer extends Action
             "beneficiaryBankCode" => $this->validatedData["beneficiary_bank_code"],
             "beneficiaryAccount" => $this->validatedData["beneficiary_account_number"],
             "beneficiaryName" => $this->validatedData["beneficiary_name"],
-            "amount" => $this->validatedData["amount"],
+            "amount" => $this->validatedData["amount"] * 100,
             "narration" => $this->validatedData["narration"],
             "nameEnquirySessionID" => $this->validatedData["name_enquiry_sessionID"],
         ];

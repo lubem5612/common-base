@@ -83,6 +83,10 @@ Route::group(['as' => 'transave.'], function () {
             Route::post('validate-charge', [FlutterwaveController::class, 'validateCharge'])->name('validate');
         });
 
+        Route::prefix('transactions')->as('transactions.')->group(function() {
+            Route::post('create', [FlutterwaveController::class, 'createTransaction'])->name('create');
+        });
+
         Route::get('redirect/{id}', [FlutterwaveController::class, 'redirect'])->name('redirect');
     });
     //Kuda controller routes

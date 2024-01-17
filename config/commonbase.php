@@ -40,9 +40,9 @@ return [
     ],
 
     'flutterwave' => [
-        'secret_key'        => env('SECRET_KEY', ''),
-        'public_key'        => env('PUBLIC_KEY', ''),
-        'redirect_url'      => env('REDIRECT_URL', 'https://transave.com.ng/dashboard'),
+        'secret_key'        => env('FLUTTERWAVE_SECRET_KEY', ''),
+        'public_key'        => env('FLUTTERWAVE_PUBLIC_KEY', ''),
+        'redirect_url'      => env('FLUTTERWAVE_REDIRECT_URL', 'https://transave.com.ng/dashboard'),
         'base_url'          => env('FLUTTERWAVE_BASE_URL', 'https://api.flutterwave.com/v3')
     ],
 
@@ -78,7 +78,14 @@ return [
     ],
 
     'transaction_category' => [
-        'BANK_TRANSFER', 'CARD_TRANSACTION', 'BILL_PAYMENT', 'WALLET_TRANSFER', 'REVERSAL', 'LOAN_APPROVAL', 'LOAN_REPAYMENT'
+        'BANK_TRANSFER',
+        'CARD_TRANSACTION',
+        'BILL_PAYMENT',
+        'WALLET_TRANSFER',
+        'REVERSAL',
+        'LOAN_APPROVAL',
+        'LOAN_REPAYMENT',
+        'FLUTTERWAVE'
     ],
 
     'transaction_status' => [

@@ -4,89 +4,80 @@
 namespace Transave\CommonBase\Actions\Flutterwave;
 
 
-use Flutterwave\Flutterwave;
-use Flutterwave\Util\Currency;
-use Illuminate\Support\Arr;
-use Transave\CommonBase\Helpers\ResponseHelper;
+use Transave\CommonBase\Actions\Action;
+use Transave\CommonBase\Helpers\FlutterwaveApiHelper;
 use Transave\CommonBase\Helpers\SessionHelper;
-use Transave\CommonBase\Helpers\ValidationHelper;
-use Transave\CommonBase\Http\Models\User;
 
-class InitiateBankTransfer
+class InitiateBankTransfer extends Action
 {
-    use ValidationHelper, ResponseHelper, SessionHelper;
+    use SessionHelper;
     private $request, $validatedData;
-    private $bankPayment, $flutterwaveData = [];
-    private $user;
 
     public function __construct(array $request)
     {
         $this->request = $request;
-        $this->bankPayment = Flutterwave::create('account');
     }
 
-    public function execute()
+    public function handle()
     {
-        try {
-            $this->validateRequest();
-            $this->setUser();
-            $this->setTransactionData();
-            $this->setCustomerData();
-            return $this->initiateCharge();
-        }catch (\Exception $exception) {
-            return $this->sendServerError($exception);
+        $this->validateRequest();
+        $this->setCurrency();
+        $this->setEmail();
+        $this->setReference();
+        $this->setPhoneNumber();
+        return $this->initiateTransfer();
+    }
+
+    private function initiateTransfer()
+    {
+        return (new FlutterwaveApiHelper([
+            "method" => 'POST',
+            "url" => '/charges?type=mono',
+            "data" => $this->validatedData
+        ]))->execute();
+    }
+
+    private function setCurrency()
+    {
+        if (!array_key_exists('currency', $this->validatedData)) {
+            $this->validatedData['currency'] = "NGN";
         }
+        return $this;
     }
 
-    private function setUser()
+    private function setReference()
     {
-        if (Arr::exists($this->validatedData, 'user_id') && $this->validatedData['user_id']) {
-            $this->user = User::query()->find($this->validatedData['user_id']);
-        }else {
-            $this->user = auth()->user();
+        $this->validatedData['tx_ref'] = $this->generateReference();
+        return $this;
+    }
+
+    private function setEmail()
+    {
+        if (!array_key_exists('email', $this->validatedData)) {
+            if (auth()->check()) $this->validatedData['email'] = auth()->user()->email;
         }
+        return $this;
     }
 
-    private function setCustomerData()
+    private function setPhoneNumber()
     {
-        $this->flutterwaveData['customer'] = $this->bankPayment->customer->create([
-            "full_name" => $this->user->first_name.' '.$this->user->last_name,
-            "email" => $this->user->email,
-            "phone" => $this->user->phone,
-        ]);
+        if (!array_key_exists('phone_number', $this->validatedData)) {
+            if (auth()->check()) $this->validatedData['phone_number'] = auth()->user()->phone;
+        }
+        return $this;
     }
 
-    private function initiateCharge()
-    {
-        $payload = $this->bankPayment->payload->create($this->flutterwaveData);
-        $response = $this->bankPayment->initiate($payload);
-        return $this->sendSuccess($response, 'bank transaction initiated');
-    }
-
-    private function setTransactionData()
-    {
-        $this->flutterwaveData = [
-            "amount" => $this->validatedData['amount'],
-            "currency" => Currency::NGN,
-            "tx_ref" => $this->generateReference(),
-            "additionalData" => [
-                "account_details" => [
-                    "account_bank" => $this->validatedData['account_bank'],
-                    "account_number" => $this->validatedData['account_number'],
-                    "country" => "NG"
-                ]
-            ],
-        ];
-    }
-
-    public function validateRequest()
+    private function validateRequest() : self
     {
         $this->validatedData = $this->validate($this->request, [
             "amount" =>"required|numeric|gt:0",
             "account_bank" => "required|size:3",
             "account_number" => "required",
-            "user_id" => "sometimes|required|exists:users,id"
+            "currency" => "nullable",
+            "email" => "nullable",
+            "phone_number" => "nullable",
+            "fullname" => "required|string"
         ]);
+        return $this;
     }
-
 }

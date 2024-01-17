@@ -44,10 +44,14 @@
         <env name="KUDA_ACCOUNT_NAME" value="LUBEM TSER"/>
         <env name="KUDA_PHONE_NUMBER" value="2348038602189"/>
 
-        <env name="TERMII_USERNAME" value="N-Alert"/>
-        <env name="TERMII_MESSAGE_TYPE" value="plain"/>
-        <env name="TERMII_MESSAGE_CHANNEL" value="dnd"/>
-        <env name="TERMII_API_KEY" value="TLL2v64Wj9XE360cVVDK7gHhLTfg1GSsX6SMEvV0J1zybJyAhK1BcRq5Ymsh87"/>
+<!--        <env name="TERMII_USERNAME" value="N-Alert"/>-->
+<!--        <env name="TERMII_MESSAGE_TYPE" value="plain"/>-->
+<!--        <env name="TERMII_MESSAGE_CHANNEL" value="dnd"/>-->
+<!--        <env name="TERMII_API_KEY" value="TLL2v64Wj9XE360cVVDK7gHhLTfg1GSsX6SMEvV0J1zybJyAhK1BcRq5Ymsh87"/>-->
+
+        <env name="FLUTTERWAVE_SECRET_KEY" value="FLWSECK_TEST-3b8af220df4ba9320c722f3685963a1a-X"/>
+        <env name="FLUTTERWAVE_PUBLIC_KEY" value="FLWPUBK_TEST-a67be78d792eff8af9b291f4c98656fa-X"/>
+        <env name="FLUTTERWAVE_BASE_URL" value="https://api.flutterwave.com/v3"/>
 
     </php>
 </phpunit>

@@ -15,7 +15,7 @@ class IntrabankFundTransfer extends Action
     private array $validatedData;
     private $withdrawal, $nameEnquiry;
     private ?User $beneficiary;
-    private $sender;
+    private $sender, $dailyLimit;
 
     public function __construct(array $request)
     {
@@ -26,6 +26,8 @@ class IntrabankFundTransfer extends Action
             $this->sender = auth()->user();
         }
         $this->withdrawal = new WithdrawalLimitHelper($this->sender->id);
+        $this->dailyLimit = $this->withdrawal->currentLimit() * 100;
+
     }
 
     public function handle()
@@ -96,7 +98,7 @@ class IntrabankFundTransfer extends Action
             'beneficiary_user_id' => 'nullable|exists:users,id',
             'beneficiary_account_number' => 'nullable|exists:users,account_number',
             'sender_user_id' => 'nullable|exists:users,id',
-            'amount' => "required|numeric|gt:0|lte:{$this->withdrawal->currentLimit()}",
+            'amount' => "required|numeric|gt:0|lte:{$this->dailyLimit}",
             'narration' => "nullable|string"
         ]);
         return $this;
