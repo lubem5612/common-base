@@ -38,6 +38,7 @@ class ResetPassword extends Action
     private function setUser()
     {
         $reset = DB::table('password_resets')->where("token", $this->validatedInput['token'])->first();
+        abort_if(!$reset, 403, "invalid or expired token");
         $this->user = User::query()->where("phone", $reset->email)->first();
 
         $isExpired = Carbon::now()->gt(Carbon::parse($reset->created_at)->addMinutes(10));
