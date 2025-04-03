@@ -72,9 +72,9 @@ class Login
         } elseif (User::query()->where('email', $this->validatedData['username'])
             ->orWhere('phone', $this->validatedData['username'])
             ->orWhere('bvn', $this->validatedData['username'])->exists()) {
-            return $this->sendError( 'password did not match username', ['errors' => ['password or username dont match']], 401);
+            return $this->sendError( 'invalid username or password', ['errors' => ['invalid username or password']], 401);
         } else {
-            return $this->sendError('entry details does not exist', ['errors' => ['record does not exist']], 404);
+            return $this->sendError('invalid username of password', ['errors' => ['invalid username of password']], 401);
         }
     }
 
