@@ -56,7 +56,7 @@ class ResetPassword extends Action
     private function validateRequest()
     {
         $this->validatedInput = $this->validate($this->request, [
-            'token' => 'required|integer|digits:4',
+            'token' => 'required|integer',
             'password' => 'required|string|min:6',
             'password_confirmation' => 'required|same:password'
         ]);
