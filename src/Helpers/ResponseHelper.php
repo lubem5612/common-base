@@ -86,8 +86,10 @@ trait ResponseHelper
                 "success" => false,
                 "message" => $exception->getMessage(),
                 "data" => null,
-                "errors" => $this->formatServerError($exception),
             ];
+            if (config('app.env') == 'development') {
+                $response["errors"] = $this->formatServerError($exception);
+            }
         }
         if (config('app.env') == 'development') Log::error($exception->getTraceAsString());
 
