@@ -62,6 +62,7 @@ class Login
         if (auth()->attempt([$this->username() => $this->validatedData['username'], 'password' => $this->validatedData['password']])) {
             $user = auth()->user();
             $this->getUserKyc();
+            $user->tokens()->delete();
 
             $user['token'] = $user->createToken(uniqid())->plainTextToken;
             $user['account'] = $this->kyc;
