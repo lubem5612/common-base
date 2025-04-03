@@ -41,7 +41,7 @@ class ResetPassword extends Action
         $this->user = User::query()->where("phone", $reset->email)->first();
 
         $isExpired = Carbon::now()->gt(Carbon::parse($reset->created_at)->addMinutes(10));
-        abort_if($isExpired, 403,  'token expired');
+        abort_if($isExpired, 403,  'invalid or expired token');
         return $this;
     }
 
