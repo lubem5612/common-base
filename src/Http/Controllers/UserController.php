@@ -71,8 +71,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $relationship = ['kyc'];
-        $wallet = request()->query('with_wallet');
+        $relationship = ['kyc', 'wallet', 'accounts'];
         if (isset($wallet)) {
             array_push($relationship, 'wallet');
         }

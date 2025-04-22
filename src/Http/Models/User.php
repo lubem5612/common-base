@@ -104,4 +104,14 @@ class User extends Authenticatable
     {
         return UserFactory::new();
     }
+
+    public function wallet() : HasOne
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(AccountNumber::class);
+    }
 }
