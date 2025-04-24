@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Transave\CommonBase\Actions\Auth\Login;
 use Transave\CommonBase\Actions\Auth\ResendToken;
 use Transave\CommonBase\Actions\Auth\VerifyAccount;
-use Transave\CommonBase\Actions\Kuda\Account\CreateVirtualAccount;
+use Transave\CommonBase\Actions\VFD\Account\CreateVirtualAccount;
 use Transave\CommonBase\Helpers\ResponseHelper;
 
 /**

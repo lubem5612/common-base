@@ -13,6 +13,8 @@ use Transave\CommonBase\Http\Controllers\ResourceController;
 use Transave\CommonBase\Http\Controllers\SupportController;
 use Transave\CommonBase\Http\Controllers\SupportReplyController;
 use Transave\CommonBase\Http\Controllers\UserController;
+use Transave\CommonBase\Http\Controllers\VfdAccountController;
+use Transave\CommonBase\Http\Controllers\VfdUserController;
 
 Route::group(['as' => 'transave.'], function () {
     //authentication routes
@@ -114,6 +116,23 @@ Route::group(['as' => 'transave.'], function () {
         Route::get('{endpoint}/{id}', [ResourceController::class, 'show'])->name('show');
         Route::match(['POST', 'PATCH', 'PUT'],'{endpoint}/{id}', [ResourceController::class, 'update'])->name('update');
         Route::delete('{endpoint}/{id}', [ResourceController::class, 'destroy'])->name('delete');
+    });
+
+    // VFD controller routes
+    Route::as('vfd.')->prefix('vfd')->group(function () {
+        Route::prefix('transfers')->group(function() {
+            Route::get('bank-list', [VfdAccountController::class, 'bankList'])->name('bank-list');
+            Route::post('name-enquiry', [KudaAccountController::class, 'nameEnquiry'])->name('name-enquiry');
+            Route::post('virtual-account', [KudaAccountController::class, 'virtualAccountTransfer'])->name('virtual-account');
+            Route::post('main-account', [KudaAccountController::class, 'mainAccountTransfer'])->name('main-account');
+            Route::post('wallet', [KudaAccountController::class, 'walletTransfer'])->name('wallet-transfer');
+        });
+        Route::prefix('accounts')->group(function() {
+            Route::get('/', [KudaUserController::class, 'listVirtualAccount'])->name('listing');
+            Route::get('/main-balance', [VfdUserController::class, 'getMainAccountBalance'])->name('main-balance');
+            Route::get('/{id}', [KudaUserController::class, 'getVirtualAccountDetails'])->name('virtual-details');
+            Route::get('/{id}/balance', [KudaUserController::class, 'getWalletBalance'])->name('main-balance');
+        });
     });
 
 });

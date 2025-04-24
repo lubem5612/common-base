@@ -116,5 +116,19 @@ return [
         'PGD' => 'Postgraduate Diploma',
         'M.Sc' => 'Master\'s Degree',
         'PhD' => 'Doctor of Philosophy',
+    ],
+
+    'vfd' => [
+        'acc_number'        => env('VFD_ACCOUNT_NUMBER', '1001651432'),
+        'acc_name'          => env('VFD_ACCOUNT_NAME', 'TranSave Technologies Limited'),
+        'phone_number'      => env('VFD_PHONE_NUMBER', '08037395286'),
+        'base_url'          => env('VFD_BASE_URL', 'https://api-devapps.vfdbank.systems/vtech-wallet/api/v2/wallet2'),
+        'token_url'         => env('VFD_TOKEN_URL', 'https://api-devapps.vfdbank.systems/vfd-tech/baas-portal/v1.1/baasauth/token'),
+        'consumer_key'      => env('VFD_CONSUMER_KEY', 'VRXNsaKFzHnKLiaH8DNhATj7JSz7'),
+        'consumer_secret'   => env('VFD_CONSUMER_SECRET', 'kgSSmBMf5mMsJbgiCH98tqUHY1pJ'),
+        'webhook_url'       => env('VFD_WEBHOOK_URL', ''),
+        'bank_code'         => env('VFD_ACCOUNT_BANK_CODE', "999999"),
+        'withdrawal_limit'  => env('VFD_WITHDRAWAL_LIMIT', 10000),
+        'bank_name'         => env('VFD_BANK_NAME', 'VFD Microfinance Bank'),
     ]
 ];

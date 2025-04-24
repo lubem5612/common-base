@@ -37,7 +37,10 @@ class ForgotPassword extends Action
 
     private function setUser()
     {
-        $this->user = User::query()->where("phone", $this->validatedData['phone'])->first();
+        $user = User::query()->where("phone", $this->validatedData['phone'])->first();
+        abort_if(!$user, 403, "There was a problem validating your request");
+
+        $this->user = $user;
         return $this;
     }
 
