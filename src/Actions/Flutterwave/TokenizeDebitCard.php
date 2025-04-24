@@ -62,7 +62,7 @@ class TokenizeDebitCard extends Action
     private function validateRequest() : self
     {
         $this->validatedData = $this->validate($this->request, [
-            'card_id' => 'required|exists:debit_cards',
+            'card_id' => 'required|exists:debit_cards,id',
             'amount' => 'required|numeric|gt:0'
         ]);
         return $this;
