@@ -39,6 +39,11 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
+        'full_name'
+    ];
+
+    protected $with = [
+        'accounts',
         'wallet'
     ];
 
@@ -113,5 +118,10 @@ class User extends Authenticatable
     public function accounts(): HasMany
     {
         return $this->hasMany(AccountNumber::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;
     }
 }

@@ -42,6 +42,7 @@ class CreateVirtualAccount
             $this->setInternationalPhoneNumber();
             $this->setRole();
             $this->setPassword();
+            $this->setTransactionPIN();
             $this->setVerificationDetails();
             $this->setAccountDefaults();
             $this->setBusinessName();
@@ -51,8 +52,7 @@ class CreateVirtualAccount
             $this->createKyc();
             return $this->sendNotification();
         }catch (\Exception $e) {
-            $this->createOrUpdateFailedAccount();
-            return $this->sendServerError($e);
+            return $this->sendError($e->getMessage(), [$e],500);
         }
     }
 
@@ -237,6 +237,12 @@ class CreateVirtualAccount
         return $this;
     }
 
+    private function setTransactionPIN()
+    {
+        $this->validatedData['transaction_pin'] = bcrypt($this->validatedData['transaction_pin']);
+        return $this;
+    }
+
     private function createOrUpdateFailedAccount()
     {
         FailedAccount::query()->updateOrCreate(
@@ -267,10 +273,11 @@ class CreateVirtualAccount
             'role'                  => 'nullable|in:customer,staff',
             'dob'                   => 'required|date',
             'nin'                   => 'sometimes|required|string|max:20',
-            'bvn'                   => 'sometimes|required|string|max:20'
+            'bvn'                   => 'sometimes|required|string|max:20',
+            'transaction_pin'       => 'sometimes|required|digits:4'
         ]);
 
-        $this->validatedData = Arr::except($data, ['password_confirmation']);
+        $this->validatedData = Arr::except($data, ['password_confirmation', 'confirm_transaction_pin']);
 
         return $this;
     }
