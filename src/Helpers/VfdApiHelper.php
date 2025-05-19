@@ -5,6 +5,7 @@ namespace Transave\CommonBase\Helpers;
 
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -13,7 +14,6 @@ class VfdApiHelper
 {
     use ValidationHelper, ResponseHelper;
     private ?string $accessToken;
-    private ?array $validatedData;
     private ?array $request;
     private $vfdResponse = null;
     private $vfdStatus = false;
@@ -32,25 +32,27 @@ class VfdApiHelper
     public function execute()
     {
         try {
-            $this->validateRequest();
-            $this->generateReference();
             $this->generateAccessToken();
             $this->makeApiCall();
+
+            return [
+                'data'          => $this->vfdResponse,
+                'success'       => $this->vfdStatus,
+                'message'       => $this->vfdMessage
+            ];
 
         }catch (\Exception $e)
         {
             Log::error($e);
             $this->vfdMessage = $e->getMessage();
             $this->vfdStatus = false;
+
+            return [
+                'data'          => $this->vfdResponse,
+                'success'       => $this->vfdStatus,
+                'message'       => $this->vfdMessage
+            ];
         }
-        return [
-            'data'          => $this->vfdResponse,
-            'success'       => $this->vfdStatus,
-            'message'       => $this->vfdMessage,
-            'meta_data'     => [
-                'requestRef'    => $this->validatedData['requestRef']
-            ]
-        ];
     }
 
     /**
@@ -60,32 +62,27 @@ class VfdApiHelper
      */
     private function generateAccessToken()
     {
-        $response = Http::withHeaders([
-            'Accept' => $this->applicationJson,
-            'Content-Type' => $this->applicationJson,
-            'Cache-Control' => 'no-cache',
-        ])->withoutVerifying()->post(config('commonbase.vfd.token_url'), [
-            "consumerKey"       => config('commonbase.vfd.consumer_key'),
-            "consumerSecret"    => config('commonbase.vfd.consumer_secret'),
-            "validityTime"      => "-1"
-        ])->json();
-
-        if ($response && array_key_exists("data", $response) && isset($response["data"]["access_token"])) {
-            $this->accessToken = $response["data"]["access_token"];
+        $accessToken = Cache::get('vfd_access_token');
+        if (!$accessToken) {
+            $response = Http::withHeaders([
+                'Accept' => $this->applicationJson,
+                'Content-Type' => $this->applicationJson,
+                'Cache-Control' => 'no-cache',
+            ])->withoutVerifying()->post(config('commonbase.vfd.token_url'), [
+                "consumerKey"       => config('commonbase.vfd.consumer_key'),
+                "consumerSecret"    => config('commonbase.vfd.consumer_secret'),
+                "validityTime"      => "-1"
+            ])->json();
+    
+            if ($response && array_key_exists("data", $response) && isset($response["data"]["access_token"])) {
+                $this->accessToken = $response["data"]["access_token"];
+                Cache::put('vfd_access_token', $this->accessToken);
+            } else {
+                abort_if(!isset($response["data"]["access_token"]), 500, "unable to retrieve access token");
+            }
         } else {
-            abort_if(!isset($response["data"]["access_token"]), 500, "unable to retrieve access token");
+            $this->accessToken = $accessToken;
         }
-    }
-
-    /**
-     * generate transaction reference
-     *
-     * @param int $length
-     * @return void
-     */
-    private function generateReference()
-    {
-        $this->validatedData['requestRef'] = 'transave-'.Carbon::now()->format('YmdHi').'-'.strtolower(Str::random(9));
     }
 
     /**
@@ -98,12 +95,14 @@ class VfdApiHelper
     private function makeApiCall()
     {
         $httpMethod = $this->httpMethod;
+        $requestPayload = $httpMethod != 'get' ? $this->request : null;
+
         $response = Http::withHeaders([
             'AccessToken' => $this->accessToken,
             'Content-Type' => $this->applicationJson,
             'Accept' => $this->applicationJson,
             'Cache-Control' => 'no-cache',
-        ])->withoutVerifying()->$httpMethod(config('commonbase.vfd.base_url').$this->endpoint, $this->validatedData)->json();
+        ])->withoutVerifying()->$httpMethod(config('commonbase.vfd.base_url').$this->endpoint, $requestPayload)->json();
 
         if (!is_array($response)) {
             $this->vfdMessage = 'error in api response';
@@ -117,13 +116,5 @@ class VfdApiHelper
                 ? $response['message']
                 : 'unknown message content from api';
         }
-
-    }
-
-    private function validateRequest()
-    {
-        $this->validatedData = $this->validate($this->request, [
-            'data' => 'nullable|array'
-        ]);
     }
 }

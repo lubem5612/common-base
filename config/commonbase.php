@@ -119,7 +119,9 @@ return [
     ],
 
     'vfd' => [
-        'acc_number'        => env('VFD_ACCOUNT_NUMBER', '1001651432'),
+        'pool_acc_number'   => env('VFD_ACCOUNT_NUMBER', '1001651432'),
+        'pool_client_id'    => env('VFD_POOL_CLIENT_ID', '151092'),
+        'pool_savings_id'   => env('VFD_POOL_SAVINGS_ID', '165143'),
         'acc_name'          => env('VFD_ACCOUNT_NAME', 'TranSave Technologies Limited'),
         'phone_number'      => env('VFD_PHONE_NUMBER', '08037395286'),
         'base_url'          => env('VFD_BASE_URL', 'https://api-devapps.vfdbank.systems/vtech-wallet/api/v2/wallet2'),
