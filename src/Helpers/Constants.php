@@ -24,4 +24,14 @@ class Constants
     ];
 
     public const WALLET_PREFIX = 'Transave-';
+
+    public const CATEGORIES = [
+        'BANK_TRANSFER'             => 'BANK_TRANSFER',
+        'BANK_TRANSFER_COMMISSION'  => 'BANK_TRANSFER_COMMISSION'
+    ];
+
+    public const IS_VERIFIED = [
+        'yes'   => 'yes',
+        'no'    => 'no'
+    ];
 }
