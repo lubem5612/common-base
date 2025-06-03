@@ -6,12 +6,15 @@ namespace Transave\CommonBase\Actions\VFD\Transfer;
 
 use Hash;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Transave\CommonBase\Helpers\BalanceHelper;
+use Transave\CommonBase\Helpers\Constants;
 use Transave\CommonBase\Helpers\VfdApiHelper;
 use Transave\CommonBase\Helpers\ResponseHelper;
 use Transave\CommonBase\Helpers\SessionHelper;
 use Transave\CommonBase\Helpers\ValidationHelper;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Transave\CommonBase\Actions\Transaction\CreateTransaction;
 
 
 class BankTransfer
@@ -65,12 +68,46 @@ class BankTransfer
 
     private function validateAndDebitUser()
     {
-        $user_id = $this->validatedData['user_id'];
-        $amount = $this->validatedData['amount'];
-        if (!$this->debitWallet($user_id, $amount)) {
-            abort(403, 'Insufficient wallet balance');
-        }
-        
+        DB::transaction(function () {
+            $user_id = $this->validatedData['user_id'];
+            $amount = $this->validatedData['amount'];
+            if (!$this->debitWallet($user_id, $amount)) {
+                abort(403, 'Insufficient wallet balance');
+            }
+    
+            $transferFee = config('commonbase.vfd.transfer_fee');
+            $transferCommission = config('commonbase.vfd.app_transfer_fee');
+            $commission = $transferCommission > $transferFee ? ($transferCommission - $transferFee) : 0.00;
+    
+            (new CreateTransaction([
+                'user_id' => auth()->id(),
+                'reference' => $this->validatedData['reference'],
+                'amount' => $this->validatedData['amount'],
+                'charges' => $transferCommission,
+                'commission' => $commission,
+                'type' => 'debit',
+                'description' => $this->validatedData['remark'],
+                'category' => Constants::CATEGORIES['BANK_TRANSFER'],
+                'status' => 'processing',
+                'payload' => json_encode($this->validatedData),
+            ]))->execute();
+            
+            if ($commission > 0) {
+                (new CreateTransaction([
+                    'user_id' => auth()->id(),
+                    'reference' => $this->validatedData['reference'],
+                    'amount' => $transferCommission,
+                    'charges' => 0.00,
+                    'commission' => 0.00,
+                    'type' => 'debit',
+                    'description' => $this->validatedData['remark'],
+                    'category' => Constants::CATEGORIES['BANK_TRANSFER_COMMISSION'],
+                    'status' => 'processing',
+                    'payload' => json_encode($this->validatedData),
+                ]))->execute();
+            }
+        });
+
         return $this;
     }
 

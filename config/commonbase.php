@@ -132,5 +132,7 @@ return [
         'bank_code'         => env('VFD_ACCOUNT_BANK_CODE', "999999"),
         'withdrawal_limit'  => env('VFD_WITHDRAWAL_LIMIT', 10000),
         'bank_name'         => env('VFD_BANK_NAME', 'VFD Microfinance Bank'),
+        'transfer_fee'      => env('VFD_TRANSFER_FEE', 10),
+        'app_transfer_fee'  => env('APP_TRANSFER_FEE', 20),
     ]
 ];
