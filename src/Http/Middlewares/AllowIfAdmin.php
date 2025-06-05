@@ -12,7 +12,10 @@ class AllowIfAdmin
     public function handle(Request $request, Closure $next)
     {
         $user = auth('sanctum')->user();
-        if (empty($user) || in_array($user->role, ['admin', 'superadmin', 'support'])) {
+        if (empty($user)) {
+            return $this->sendError('you must be authenticated to proceed');
+        }
+        if (!in_array($user->role, ['admin', 'superadmin', 'support'])) {
             return $this->sendError('you must log in as admin to proceed');
         }
 

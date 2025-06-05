@@ -42,6 +42,7 @@ class CommonBaseServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      * @param Kernel $kernel
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function boot(Kernel $kernel)
     {
