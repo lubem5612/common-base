@@ -25,4 +25,8 @@ class Transaction extends Model
     {
         return TransactionFactory::new();
     }
+
+    public function getPayloadAttribute($value) {
+        return $value === null ? $value : json_decode($value);
+    }
 }

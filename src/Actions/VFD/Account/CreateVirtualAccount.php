@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Transave\CommonBase\Actions\SMS\TermiiService;
 use Transave\CommonBase\Helpers\VfdApiHelper;
 use Transave\CommonBase\Helpers\PhoneHelper;
 use Transave\CommonBase\Helpers\ResponseHelper;
@@ -42,6 +41,7 @@ class CreateVirtualAccount
             $this->setInternationalPhoneNumber();
             $this->setRole();
             $this->setPassword();
+            $this->setTransactionPIN();
             $this->setVerificationDetails();
             $this->setAccountDefaults();
             $this->setBusinessName();
@@ -51,8 +51,7 @@ class CreateVirtualAccount
             $this->createKyc();
             return $this->sendNotification();
         }catch (\Exception $e) {
-            $this->createOrUpdateFailedAccount();
-            return $this->sendServerError($e);
+            return $this->sendError($e->getMessage(), [$e],500);
         }
     }
 
@@ -205,13 +204,6 @@ class CreateVirtualAccount
 
     private function sendNotification()
     {
-        $firstName = $this->validatedData['first_name'];
-        $token = $this->validatedData['verification_token'];
-        $phone = $this->validatedData['phone'];
-
-        $message = "Hello {$firstName}, use the code  {$token} to activate your account. From Transave";
-        (new TermiiService(['to' => $phone, 'sms' => $message]))->execute();
-
         return $this->sendSuccess(User::query()->find($this->validatedData['id']), 'account created successfully');
     }
 
@@ -234,6 +226,12 @@ class CreateVirtualAccount
     private function setPassword()
     {
         $this->validatedData['password'] = bcrypt($this->validatedData['password']);
+        return $this;
+    }
+
+    private function setTransactionPIN()
+    {
+        $this->validatedData['transaction_pin'] = bcrypt($this->validatedData['transaction_pin']);
         return $this;
     }
 
@@ -267,10 +265,11 @@ class CreateVirtualAccount
             'role'                  => 'nullable|in:customer,staff',
             'dob'                   => 'required|date',
             'nin'                   => 'sometimes|required|string|max:20',
-            'bvn'                   => 'sometimes|required|string|max:20'
+            'bvn'                   => 'sometimes|required|string|max:20',
+            'transaction_pin'       => 'sometimes|required|digits:4'
         ]);
 
-        $this->validatedData = Arr::except($data, ['password_confirmation']);
+        $this->validatedData = Arr::except($data, ['password_confirmation', 'confirm_transaction_pin']);
 
         return $this;
     }

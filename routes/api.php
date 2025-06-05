@@ -120,15 +120,13 @@ Route::group(['as' => 'transave.'], function () {
 
     // VFD controller routes
     Route::as('vfd.')->prefix('vfd')->group(function () {
-        Route::prefix('transfers')->group(function() {
+        Route::prefix('transfer')->group(function() {
             Route::get('bank-list', [VfdAccountController::class, 'bankList'])->name('bank-list');
-            Route::post('name-enquiry', [KudaAccountController::class, 'nameEnquiry'])->name('name-enquiry');
-            Route::post('virtual-account', [KudaAccountController::class, 'virtualAccountTransfer'])->name('virtual-account');
-            Route::post('main-account', [KudaAccountController::class, 'mainAccountTransfer'])->name('main-account');
-            Route::post('wallet', [KudaAccountController::class, 'walletTransfer'])->name('wallet-transfer');
+            Route::get('name-enquiry', [VfdAccountController::class, 'nameEnquiry'])->name('name-enquiry');
+            Route::post('/', [VfdAccountController::class, 'fundTransfer'])->name('fund-transfer');
         });
         Route::prefix('accounts')->group(function() {
-            Route::get('/', [KudaUserController::class, 'listVirtualAccount'])->name('listing');
+            Route::get('/', [VfdUserController::class, 'listSubAccounts'])->name('listing');
             Route::get('/main-balance', [VfdUserController::class, 'getMainAccountBalance'])->name('main-balance');
             Route::get('/{id}', [KudaUserController::class, 'getVirtualAccountDetails'])->name('virtual-details');
             Route::get('/{id}/balance', [KudaUserController::class, 'getWalletBalance'])->name('main-balance');
