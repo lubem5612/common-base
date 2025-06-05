@@ -29,7 +29,7 @@ return [
         'message_type'  => env('TERMII_MESSAGE_TYPE', 'plain'),
         'channel'       => env('TERMII_MESSAGE_CHANNEL', 'dnd'),
         'api_key'       => env('TERMII_API_KEY', ''),
-        'base_url'      => env('TERMII_BASE_URL', 'https://api.ng.termii.com/api/sms/send'),
+        'base_url'      => env('TERMII_BASE_URL', 'https://v3.api.termii.com/api/sms/send'),
     ],
 
     'paystack' => [
