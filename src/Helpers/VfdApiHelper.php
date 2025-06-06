@@ -18,6 +18,7 @@ class VfdApiHelper
     private $vfdResponse = null;
     private $vfdStatus = false;
     private $vfdMessage = '';
+    private $vfdStatusCode = '';
     private $applicationJson = 'application/json';
     private string $endpoint;
     private string $httpMethod;
@@ -38,7 +39,8 @@ class VfdApiHelper
             return [
                 'data'          => $this->vfdResponse,
                 'success'       => $this->vfdStatus,
-                'message'       => $this->vfdMessage
+                'message'       => $this->vfdMessage,
+                'status'        => $this->vfdStatusCode
             ];
 
         }catch (\Exception $e)
@@ -50,7 +52,8 @@ class VfdApiHelper
             return [
                 'data'          => $this->vfdResponse,
                 'success'       => $this->vfdStatus,
-                'message'       => $this->vfdMessage
+                'message'       => $this->vfdMessage,
+                'status'        => $this->vfdStatusCode
             ];
         }
     }
@@ -111,6 +114,7 @@ class VfdApiHelper
             $this->vfdResponse = isset($response['data']) ? $response['data'] : null;
             $this->vfdMessage = isset($response['message']) ? $response['message'] : 'api call successful';
             $this->vfdStatus = true;
+            $this->vfdStatusCode = $response['status'];
         } else {
             $this->vfdMessage = array_key_exists('message', $response)
                 ? $response['message']
