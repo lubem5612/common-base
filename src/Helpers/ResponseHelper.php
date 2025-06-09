@@ -100,7 +100,7 @@ trait ResponseHelper
     {
         $errors = [];
         foreach ($e->getTrace() as $error) {
-            if ($error['line'] && $error['file']) {
+            if (array_key_exists('line', $error ) && $error['line'] && array_key_exists('file', $errors) && $error['file']) {
                 $message = "error on line {$error['line']} in the file {$error['file']}";
                 array_push($errors, $message);
             }
