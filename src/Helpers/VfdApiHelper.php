@@ -4,11 +4,9 @@
 namespace Transave\CommonBase\Helpers;
 
 
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class VfdApiHelper
 {
@@ -115,6 +113,11 @@ class VfdApiHelper
             $this->vfdMessage = isset($response['message']) ? $response['message'] : 'api call successful';
             $this->vfdStatus = true;
             $this->vfdStatusCode = $response['status'];
+            if ($this->vfdStatusCode == '99') {
+                Cache::delete('vfd_access_token');
+                $this->generateAccessToken();
+                $this->makeApiCall();
+            }
         } else {
             $this->vfdMessage = array_key_exists('message', $response)
                 ? $response['message']
