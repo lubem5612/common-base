@@ -32,6 +32,7 @@ Route::group(['as' => 'transave.'], function () {
     //users routes
     Route::group(['prefix' => 'users', 'middleware' => 'auth:sanctum'], function () {
         Route::get('/', [ UserController::class, 'index'])->name('users.index');
+        Route::get('/account', [ UserController::class, 'account'])->name('users.account');
         Route::get('/{id}/kyc', [ UserController::class, 'kyc'])->name('user.kyc');
         Route::patch('{id}/verify-password', [ PasswordController::class, 'verifyPassword'])->name('verify.password');
         Route::patch('{id}/account-type', [ UserController::class, 'updateAccountType'])->name('update.account-type');
@@ -123,7 +124,7 @@ Route::group(['as' => 'transave.'], function () {
         Route::prefix('transfer')->group(function() {
             Route::get('bank-list', [VfdAccountController::class, 'bankList'])->name('bank-list');
             Route::get('name-enquiry', [VfdAccountController::class, 'nameEnquiry'])->name('name-enquiry');
-            Route::post('/', [VfdAccountController::class, 'fundTransfer'])->name('fund-transfer');
+            Route::post('/', [VfdAccountController::class, 'fundTransfer'])->name('fund-transfer')->middleware('verification');
         });
         Route::prefix('accounts')->group(function() {
             Route::get('/', [VfdUserController::class, 'listSubAccounts'])->name('listing');
