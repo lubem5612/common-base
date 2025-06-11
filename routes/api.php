@@ -131,6 +131,7 @@ Route::group(['as' => 'transave.'], function () {
             Route::get('/{id}', [KudaUserController::class, 'getVirtualAccountDetails'])->name('virtual-details');
             Route::get('/{id}/balance', [KudaUserController::class, 'getWalletBalance'])->name('main-balance');
         });
+        Route::post('credit/notification', [VfdAccountController::class, 'webhook'])->name('webhook');
     });
 
 });

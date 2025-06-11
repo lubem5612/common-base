@@ -5,9 +5,11 @@ namespace Transave\CommonBase\Http\Controllers;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Transave\CommonBase\Actions\VFD\Transfer\BankList;
 use Transave\CommonBase\Actions\VFD\Transfer\AccountEnquiry;
 use Transave\CommonBase\Actions\VFD\Transfer\BankTransfer;
+use Transave\CommonBase\Actions\VFD\Webhook\WebhookService;
 
 /**
  * @group Kuda Transfer Controller Endpoints
@@ -18,8 +20,9 @@ class VfdAccountController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth:sanctum')->except('webhook');
         $this->middleware('admin')->only('mainAccountTransfer');
+        $this->middleware('vfdwebhook')->only('webhook');
     }
 
     /**
@@ -122,5 +125,12 @@ class VfdAccountController extends Controller
     public function fundTransfer(Request $request)
     {
         return (new BankTransfer($request->all()))->execute();
+    }
+
+    public function webhook(Request $request)
+    {
+        $response = (new WebhookService($request->all()))->execute();
+        Log::info($response);
+        return $response;
     }
 }

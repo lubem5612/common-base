@@ -71,7 +71,7 @@ class CreateTransaction extends Action
     {
         $this->validatedData = $this->validate($this->request, [
             'user_id' => 'required|exists:users,id',
-            'reference' => 'nullable|string|min:20',
+            'reference' => 'nullable|string',
             'amount' => 'required|numeric|gt:0',
             'charges' => 'nullable|numeric|gte:0',
             'commission' => 'nullable|numeric|gte:0',

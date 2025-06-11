@@ -19,4 +19,14 @@ class AccountNumber extends Model
     {
         return AccountNumberFactory::new();
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class, 'user_id', 'user_id');
+    }
 }
