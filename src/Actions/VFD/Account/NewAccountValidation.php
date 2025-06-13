@@ -53,6 +53,10 @@ class NewAccountValidation
                         $user->save();
                     }
                 }
+            } else {
+                $user->account_status = Constants::ACCOUNT_STATUS['suspended'];
+                $user->Save();
+                // Send email
             }
         }
     }

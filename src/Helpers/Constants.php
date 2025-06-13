@@ -28,7 +28,8 @@ class Constants
     public const CATEGORIES = [
         'BANK_TRANSFER'             => 'BANK_TRANSFER',
         'BANK_TRANSFER_COMMISSION'  => 'BANK_TRANSFER_COMMISSION',
-        'BILL_PAYMENT'              => 'BILL_PAYMENT'
+        'BILL_PAYMENT'              => 'BILL_PAYMENT',
+        'WALLET_FUNDING'            => 'WALLET_FUNDING'
     ];
 
     public const IS_VERIFIED = [
