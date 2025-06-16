@@ -33,7 +33,7 @@ class WebhookService extends Action
     private function getUser()
     {
         $account = AccountNumber::where('account_number', $this->request['account_number'])->with(['wallet'])->first();
-        abort_unless(!is_null($account), 404, 'Account number does not exist');
+        abort_unless(!is_null($account), 200, 'Webhook call successful');
         
         $this->wallet = $account->wallet;
     }
