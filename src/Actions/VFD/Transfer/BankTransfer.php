@@ -82,13 +82,14 @@ class BankTransfer
         DB::transaction(function () {
             $user_id = $this->validatedData['user_id'];
             $amount = $this->validatedData['amount'];
-            if (!$this->debitWallet($user_id, $amount)) {
-                abort(403, 'Insufficient wallet balance');
-            }
-    
             $transferFee = config('commonbase.vfd.transfer_fee');
             $transferCommission = config('commonbase.vfd.app_transfer_fee');
             $commission = $transferCommission > $transferFee ? ($transferCommission - $transferFee) : 0.00;
+
+            $totalAmount = $amount + $transferCommission;
+            if (!$this->debitWallet($user_id, $totalAmount)) {
+                abort(403, 'Insufficient wallet balance');
+            }
     
             $response = (new CreateTransaction([
                 'user_id' => auth()->id(),
