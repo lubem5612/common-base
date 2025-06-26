@@ -5,14 +5,18 @@ namespace Transave\CommonBase\Actions\VFD\Webhook;
 
 
 use App\Jobs\WalletCreditJob;
+use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Transave\CommonBase\Actions\Action;
 use Transave\CommonBase\Helpers\Constants;
+use Transave\CommonBase\Helpers\UtilsHelper;
 use Transave\CommonBase\Http\Models\AccountNumber;
 use Transave\CommonBase\Http\Models\Transaction;
 
 class WebhookService extends Action
 {
+    use UtilsHelper;
+
     private $request, $wallet;
 
     public function __construct($request)
@@ -24,6 +28,8 @@ class WebhookService extends Action
     {
         try {
             $this->getUser();
+            $this->getBankName();
+            $this->getSenderAndRecipientName();
             return $this->sendResponse();
         } catch (HttpException $e) {
             return $this->sendServerError($e, $e->getStatusCode());
@@ -36,6 +42,20 @@ class WebhookService extends Action
         abort_unless(!is_null($account), 200, 'Webhook call successful');
         
         $this->wallet = $account->wallet;
+    }
+
+    private function getBankName()
+    {
+        $this->request['senderBank'] = $this->getBankNameByCode($this->request['originator_bank']);
+        $this->request['recipientBank'] = config('commonbase.vfd.bank_name');
+    }
+
+    private function getSenderAndRecipientName()
+    {
+        $recipientAccount = AccountNumber::whereAccountNumber($this->request['account_number'])->with('user')->first();
+        $this->request['toClient'] = $this->removeStrings($recipientAccount->user->fullName, [Constants::WALLET_PREFIX]);
+
+        $this->request['fromClient'] = $this->request['originator_account_name'];
     }
 
     private function sendResponse()
@@ -59,6 +79,7 @@ class WebhookService extends Action
             ];
             WalletCreditJob::dispatch($data);
         }
-        return response()->json(['message' => $message, 'data' => $this->request, 'success' => true ], 200);
+        $dto = Arr::except($this->request, ['toClient', 'fromClient', 'senderBank', 'recipientBank']);
+        return response()->json(['message' => $message, 'data' => $dto, 'success' => true ], 200);
     }
 }

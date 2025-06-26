@@ -10,6 +10,7 @@ use Transave\CommonBase\Actions\Transaction\UpdateTransaction;
 use Transave\CommonBase\Actions\User\VerifyTransactionPin;
 use Transave\CommonBase\Helpers\BalanceHelper;
 use Transave\CommonBase\Helpers\Constants;
+use Transave\CommonBase\Helpers\UtilsHelper;
 use Transave\CommonBase\Helpers\VfdApiHelper;
 use Transave\CommonBase\Helpers\ResponseHelper;
 use Transave\CommonBase\Helpers\SessionHelper;
@@ -20,7 +21,7 @@ use Transave\CommonBase\Actions\Transaction\CreateTransaction;
 
 class BankTransfer
 {
-    use ResponseHelper, ValidationHelper, SessionHelper, BalanceHelper;
+    use ResponseHelper, ValidationHelper, SessionHelper, BalanceHelper, UtilsHelper;
     private array $request, $transaction, $validatedData;
 
     public function __construct(array $request)
@@ -34,6 +35,7 @@ class BankTransfer
             $this->validateRequest();
             $this->validateTransactionPin();
             $this->generateRequestReference();
+            $this->getBankName();
             $this->validateAndDebitUser();
             return $this->processTransfer();
         } catch (HttpException $e) {
@@ -75,6 +77,12 @@ class BankTransfer
     private function generateRequestReference()
     {
         $this->validatedData['reference'] = $this->generateReference();
+    }
+
+    private function getBankName()
+    {
+        $this->validatedData['recipientBank'] = $this->getBankNameByCode($this->validatedData['toBank']);
+        $this->validatedData['senderBank'] = config('commonbase.vfd.bank_name');
     }
 
     private function validateAndDebitUser()
