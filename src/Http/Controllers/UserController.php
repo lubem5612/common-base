@@ -16,11 +16,12 @@ use Transave\CommonBase\Actions\User\SetTransactionPin;
 use Transave\CommonBase\Actions\User\UpdateAccountStatus;
 use Transave\CommonBase\Actions\User\UpdateAccountType;
 use Transave\CommonBase\Actions\User\VerifyTransactionPin;
-use Transave\CommonBase\Helpers\KycHelper;
+use Transave\CommonBase\Helpers\ResponseHelper;
 use Transave\CommonBase\Http\Models\User;
 
 class UserController extends Controller
 {
+    use ResponseHelper;
     /**
      * UserController constructor.
      */
@@ -76,6 +77,17 @@ class UserController extends Controller
             array_push($relationship, 'wallet');
         }
         return (new SearchUsers(User::class, $relationship))->execute();
+    }
+
+    /**
+     * Get user account
+     *
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function account()
+    {
+        $user = request()->user();
+        return $this->sendSuccess($user, 'Account fetched successfully');
     }
 
     /**

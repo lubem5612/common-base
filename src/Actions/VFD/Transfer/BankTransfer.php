@@ -4,21 +4,25 @@
 namespace Transave\CommonBase\Actions\VFD\Transfer;
 
 
-use Hash;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Transave\CommonBase\Actions\Transaction\UpdateTransaction;
+use Transave\CommonBase\Actions\User\VerifyTransactionPin;
 use Transave\CommonBase\Helpers\BalanceHelper;
+use Transave\CommonBase\Helpers\Constants;
+use Transave\CommonBase\Helpers\UtilsHelper;
 use Transave\CommonBase\Helpers\VfdApiHelper;
 use Transave\CommonBase\Helpers\ResponseHelper;
 use Transave\CommonBase\Helpers\SessionHelper;
 use Transave\CommonBase\Helpers\ValidationHelper;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Transave\CommonBase\Actions\Transaction\CreateTransaction;
 
 
 class BankTransfer
 {
-    use ResponseHelper, ValidationHelper, SessionHelper, BalanceHelper;
-    private array $request;
-    private array $validatedData;
+    use ResponseHelper, ValidationHelper, SessionHelper, BalanceHelper, UtilsHelper;
+    private array $request, $transaction, $validatedData;
 
     public function __construct(array $request)
     {
@@ -28,11 +32,12 @@ class BankTransfer
     public function execute()
     {
         try {
-            return $this->validateRequest()
-            ->validateTransactionPin()
-            ->generateRequestReference()
-            ->validateAndDebitUser()
-            ->processTransfer();
+            $this->validateRequest();
+            $this->validateTransactionPin();
+            $this->generateRequestReference();
+            $this->getBankName();
+            $this->validateAndDebitUser();
+            return $this->processTransfer();
         } catch (HttpException $e) {
             return $this->sendServerError($e, $e->getStatusCode());
         }
@@ -45,36 +50,89 @@ class BankTransfer
         $data['fromClientId'] = config('commonbase.vfd.pool_client_id');
         $data['fromSavingsId'] = config('commonbase.vfd.pool_savings_id');
         
-        return (new VfdApiHelper($data, '/transfer', 'post'))->execute();
+        $response = (new VfdApiHelper($data, '/transfer', 'post'))->execute();
+        if (isset($response['status']) && $response['status'] == '00') {
+            (new UpdateTransaction([
+                'transaction_id'    => $this->transaction['id'],
+                'status'            => Constants::SUCCESSFUL,
+                'payload'           => json_encode([...$this->validatedData, ...$response])
+            ]))->execute();
+        }
+
+        return $response;
     }
 
     private function validateTransactionPin()
     {
-        if (!Hash::check($this->validatedData['transaction_pin'], auth()->user()->transaction_pin)) {
-            abort(403, 'Incorrect transaction PIN, please try again');
-        }
-        
-        return $this;
+        $response = (new VerifyTransactionPin([
+            'user_id' => auth()->id(),
+            'transaction_pin' => $this->validatedData['transaction_pin']
+        ]))->execute();
+
+        $data = json_decode($response->getContent(), true);
+        unset($this->validatedData['transaction_pin']);
+        abort_unless($data['success'], 403, 'Incorrect transaction PIN, please try again');
     }
 
     private function generateRequestReference()
     {
         $this->validatedData['reference'] = $this->generateReference();
-        return $this;
+    }
+
+    private function getBankName()
+    {
+        $this->validatedData['recipientBank'] = $this->getBankNameByCode($this->validatedData['toBank']);
+        $this->validatedData['senderBank'] = config('commonbase.vfd.bank_name');
     }
 
     private function validateAndDebitUser()
     {
-        $user_id = $this->validatedData['user_id'];
-        $amount = $this->validatedData['amount'];
-        if (!$this->debitWallet($user_id, $amount)) {
-            abort(403, 'Insufficient wallet balance');
-        }
-        
-        return $this;
+        DB::transaction(function () {
+            $user_id = $this->validatedData['user_id'];
+            $amount = $this->validatedData['amount'];
+            $transferFee = config('commonbase.vfd.transfer_fee');
+            $transferCommission = config('commonbase.vfd.app_transfer_fee');
+            $commission = $transferCommission > $transferFee ? ($transferCommission - $transferFee) : 0.00;
+
+            $totalAmount = $amount + $transferCommission;
+            if (!$this->debitWallet($user_id, $totalAmount)) {
+                abort(403, 'Insufficient wallet balance');
+            }
+    
+            $response = (new CreateTransaction([
+                'user_id' => auth()->id(),
+                'reference' => $this->validatedData['reference'],
+                'amount' => $this->validatedData['amount'],
+                'charges' => $transferCommission,
+                'commission' => $commission,
+                'type' => Constants::TRANSACTION_TYPE['DEBIT'],
+                'description' => $this->validatedData['remark'],
+                'category' => Constants::CATEGORIES['BANK_TRANSFER'],
+                'status' => Constants::PROCESSING,
+                'payload' => json_encode($this->validatedData),
+            ]))->execute();
+            
+            if ($commission > 0) {
+                (new CreateTransaction([
+                    'user_id' => auth()->id(),
+                    'reference' => $this->validatedData['reference'],
+                    'amount' => $transferCommission,
+                    'charges' => 0.00,
+                    'commission' => 0.00,
+                    'type' => 'debit',
+                    'description' => $this->validatedData['remark'],
+                    'category' => Constants::CATEGORIES['BANK_TRANSFER_COMMISSION'],
+                    'status' => Constants::SUCCESSFUL,
+                    'payload' => json_encode($this->validatedData),
+                ]))->execute();
+            }
+
+            $data = json_decode($response->getContent(), true);
+            $this->transaction = $data['data'];
+        });
     }
 
-    private function validateRequest() : self
+    private function validateRequest()
     {
         $this->request['user_id'] = auth()->user()->id;
         $this->request['signature'] = hash(
@@ -107,7 +165,5 @@ class BankTransfer
             'transfer_fee'          => 'nullable|numeric|gte:0',
             'transaction_pin'       => 'required|digits:4'
         ]);
-
-        return $this;
     }
 }

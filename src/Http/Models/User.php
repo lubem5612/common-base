@@ -44,7 +44,8 @@ class User extends Authenticatable
 
     protected $with = [
         'accounts',
-        'wallet'
+        'wallet',
+        'kyc'
     ];
 
     public function kyc() : HasOne

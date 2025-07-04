@@ -2,6 +2,10 @@
 
 namespace Transave\CommonBase\Helpers;
 
+
+use Transave\CommonBase\Actions\VFD\Transfer\BankList;
+
+
 trait UtilsHelper
 {
     /**
@@ -14,5 +18,24 @@ trait UtilsHelper
     {
         $data = [...$data, 'undefined', null];
         return str_replace($data, "", $value);
+    }
+
+    public function getBankNameByCode(string $code) :? string
+    {
+        $bankName = "";
+        if ($code) {
+            $response = (new BankList())->execute();
+            abort_unless($response['success'], 403, 'failed in fetching bank list');
+
+            $banks = $response['data']['bank'];
+
+            foreach($banks as $bank) {
+                if ($bank['code'] == $code) {
+                    $bankName = $bank['name'];
+                }
+            }
+        }
+
+        return $bankName;
     }
 }

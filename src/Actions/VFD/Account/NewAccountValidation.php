@@ -47,11 +47,16 @@ class NewAccountValidation
                         $user->first_name = Constants::WALLET_PREFIX.$user->first_name;
                         $user->account_status = Constants::ACCOUNT_STATUS['verified'];
                         $user->account_type = Constants::ACCOUNT_TYPE['classic'];
+                        $user->is_verified = Constants::IS_VERIFIED['yes'];
                         $user->kyc->verification_status = Constants::ACCOUNT_STATUS['incomplete'];
                         $user->kyc->save();
                         $user->save();
                     }
                 }
+            } else {
+                $user->account_status = Constants::ACCOUNT_STATUS['suspended'];
+                $user->Save();
+                // Send email
             }
         }
     }

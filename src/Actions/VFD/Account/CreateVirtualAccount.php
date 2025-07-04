@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Transave\CommonBase\Actions\SMS\TermiiService;
 use Transave\CommonBase\Helpers\VfdApiHelper;
 use Transave\CommonBase\Helpers\PhoneHelper;
 use Transave\CommonBase\Helpers\ResponseHelper;
@@ -205,13 +204,6 @@ class CreateVirtualAccount
 
     private function sendNotification()
     {
-        $firstName = $this->validatedData['first_name'];
-        $token = $this->validatedData['verification_token'];
-        $phone = $this->validatedData['phone'];
-
-        $message = "Hello {$firstName}, use the code  {$token} to activate your account. From Transave";
-        (new TermiiService(['to' => $phone, 'sms' => $message]))->execute();
-
         return $this->sendSuccess(User::query()->find($this->validatedData['id']), 'account created successfully');
     }
 

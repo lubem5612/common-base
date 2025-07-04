@@ -4,6 +4,7 @@
 namespace Transave\CommonBase\Actions\User;
 
 
+use Exception;
 use Illuminate\Support\Facades\Hash;
 use Transave\CommonBase\Actions\Action;
 use Transave\CommonBase\Helpers\SessionHelper;
@@ -22,10 +23,14 @@ class VerifyTransactionPin extends Action
 
     public function handle()
     {
-        return $this
-            ->validateRequest()
-            ->setUser()
-            ->verifyTransactionPin();
+        try {
+            return $this
+                ->validateRequest()
+                ->setUser()
+                ->verifyTransactionPin();
+        } catch (Exception $e) {
+            $this->sendServerError($e);
+        }
     }
 
     private function verifyTransactionPin()
@@ -42,7 +47,7 @@ class VerifyTransactionPin extends Action
         if (!array_key_exists('user_id', $this->validatedData)) {
             $this->validatedData['user_id'] = auth()->id();
         }
-        $this->user = User::query()->find($this->validatedData['user_id']);
+        $this->user = User::find($this->validatedData['user_id']);
 
         abort_if($this->getSession($this->user->id) > 4, 403, response()->json(['message' => 'maximum attempts exceeded', 'data' => null, 'success' => false]));
 
@@ -53,7 +58,7 @@ class VerifyTransactionPin extends Action
     {
         $this->validatedData = $this->validate($this->request, [
             'user_id' => 'required|exists:users,id',
-            'transaction_pin' => 'required|integer|digits:4',
+            'transaction_pin' => 'required|string|max:4|min:4',
         ]);
 
         return $this;
