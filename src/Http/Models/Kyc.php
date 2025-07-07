@@ -40,6 +40,7 @@ class Kyc extends Model
         'income_range',
         'verification_status',
         'is_loan_compliant',
+        'verification_payload',
     ];
 
     public function user() : BelongsTo

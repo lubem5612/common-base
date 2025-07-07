@@ -24,7 +24,7 @@ trait SessionHelper
 
     protected function generateReference()
     {
-        return 'transave-'.Carbon::now()->format('YmdHi').'-'.strtolower(Str::random(9));
+        return 'transave-'. Carbon::now()->format('YmdHi') . mt_rand(123456, 999999);
     }
 
 }

@@ -12,9 +12,9 @@ class AccountVerification
     public function handle(Request $request, Closure $next)
     {
         $user = auth('sanctum')->user();
-        if (empty($user) || $user->is_verified!='yes' || in_array($user->account_status, ['banned', 'suspended']))
-        {
-            return $this->sendError('your account is not active');
+        if (empty($user) || $user->is_verified !='yes' || $user->account_status != 'verified') {
+            $message = "Your account is $user->account_status, kindly contact admin - support@transave.com.ng";
+            return $this->sendError($message, [], 403);
         }
 
         return $next($request);

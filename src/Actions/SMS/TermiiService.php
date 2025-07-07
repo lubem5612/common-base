@@ -28,11 +28,12 @@ class TermiiService
     public function execute()
     {
         try {
-            return $this
-                ->validateRequest()
-                ->setData()
-                ->makeApiCall()
-                ->sendResponse();
+            return $this->sendSuccess(null, 'api called');
+//            return $this
+//                ->validateRequest()
+//                ->setData()
+//                ->makeApiCall()
+//                ->sendResponse();
         }catch (\Exception $e) {
             return $this->sendServerError($e);
         }

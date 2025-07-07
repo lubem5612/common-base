@@ -89,7 +89,6 @@ class KudaFundTransferTest extends TestCase
             'amount' => "500",
         ];
         $response = (new IntrabankFundTransfer($input))->execute();
-        dd($response);
         $this->assertTrue($response['success']);
         $this->assertNull($response['data']);
         $this->assertNotNull($response['message']);
