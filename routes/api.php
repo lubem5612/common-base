@@ -13,6 +13,8 @@ use Transave\CommonBase\Http\Controllers\ResourceController;
 use Transave\CommonBase\Http\Controllers\SupportController;
 use Transave\CommonBase\Http\Controllers\SupportReplyController;
 use Transave\CommonBase\Http\Controllers\UserController;
+use Transave\CommonBase\Http\Controllers\VfdAccountController;
+use Transave\CommonBase\Http\Controllers\VfdUserController;
 
 Route::group(['as' => 'transave.'], function () {
     //authentication routes
@@ -30,6 +32,7 @@ Route::group(['as' => 'transave.'], function () {
     //users routes
     Route::group(['prefix' => 'users', 'middleware' => 'auth:sanctum'], function () {
         Route::get('/', [ UserController::class, 'index'])->name('users.index');
+        Route::get('/account', [ UserController::class, 'account'])->name('users.account');
         Route::get('/{id}/kyc', [ UserController::class, 'kyc'])->name('user.kyc');
         Route::patch('{id}/verify-password', [ PasswordController::class, 'verifyPassword'])->name('verify.password');
         Route::patch('{id}/account-type', [ UserController::class, 'updateAccountType'])->name('update.account-type');
@@ -114,6 +117,22 @@ Route::group(['as' => 'transave.'], function () {
         Route::get('{endpoint}/{id}', [ResourceController::class, 'show'])->name('show');
         Route::match(['POST', 'PATCH', 'PUT'],'{endpoint}/{id}', [ResourceController::class, 'update'])->name('update');
         Route::delete('{endpoint}/{id}', [ResourceController::class, 'destroy'])->name('delete');
+    });
+
+    // VFD controller routes
+    Route::as('vfd.')->prefix('vfd')->group(function () {
+        Route::prefix('transfer')->group(function() {
+            Route::get('bank-list', [VfdAccountController::class, 'bankList'])->name('bank-list');
+            Route::get('name-enquiry', [VfdAccountController::class, 'nameEnquiry'])->name('name-enquiry');
+            Route::post('/', [VfdAccountController::class, 'fundTransfer'])->name('fund-transfer')->middleware('verification');
+        });
+        Route::prefix('accounts')->group(function() {
+            Route::get('/', [VfdUserController::class, 'listSubAccounts'])->name('listing');
+            Route::get('/main-balance', [VfdUserController::class, 'getMainAccountBalance'])->name('main-balance');
+            Route::get('/{id}', [KudaUserController::class, 'getVirtualAccountDetails'])->name('virtual-details');
+            Route::get('/{id}/balance', [KudaUserController::class, 'getWalletBalance'])->name('main-balance');
+        });
+        Route::post('credit/notification', [VfdAccountController::class, 'webhook'])->name('webhook');
     });
 
 });

@@ -86,10 +86,12 @@ trait ResponseHelper
                 "success" => false,
                 "message" => $exception->getMessage(),
                 "data" => null,
-                "errors" => $this->formatServerError($exception),
             ];
+            if (config('app.env') == 'local') {
+                $response["errors"] = $this->formatServerError($exception);
+            }
         }
-        if (config('app.env') == 'development') Log::error($exception->getTraceAsString());
+        if (config('app.env') == 'local') Log::error($exception->getTraceAsString());
 
         return response()->json($response, $code, [], JSON_INVALID_UTF8_SUBSTITUTE );
     }
