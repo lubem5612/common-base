@@ -4,6 +4,7 @@
 namespace Transave\CommonBase\Actions\VFD\Account;
 
 
+use Illuminate\Support\Facades\Log;
 use Transave\CommonBase\Helpers\ResponseHelper;
 use Transave\CommonBase\Http\Models\User;
 use Transave\CommonBase\Helpers\Constants;
@@ -18,6 +19,7 @@ class NewAccountValidation
         try {
             $this->validateAccount();
         }catch (\Exception $e) {
+            Log::error($e->getTraceAsString());
             $this->sendServerError($e);
         }
     }
