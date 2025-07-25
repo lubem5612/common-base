@@ -38,7 +38,7 @@ class NewAccountValidation
                     $kyc = $verifcation_payload->data;
                     $regName = $user->first_name.$user->middle_name.$user->last_name;
                     $regName = $this->removeStrings(strtolower($regName), [strtolower(Constants::WALLET_PREFIX)]);
-                    $kycName = $kyc->firstname.$kyc->middlename.$kyc->lastname;
+                    $kycName = $kyc?->firstname.$kyc?->middlename.$kyc?->lastname;
                     $kycName = $this->removeStrings(strtolower($kycName), [strtolower(Constants::WALLET_PREFIX)]);
     
                     if ($kycName != $regName) {
