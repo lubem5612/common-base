@@ -19,7 +19,7 @@ class NewAccountValidation
         try {
             $this->validateAccount();
         }catch (\Exception $e) {
-            Log::error($e->getTraceAsString());
+            Log::error($e->getMessage());
             $this->sendServerError($e);
         }
     }
