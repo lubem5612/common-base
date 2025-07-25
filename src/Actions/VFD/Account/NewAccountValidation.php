@@ -33,33 +33,48 @@ class NewAccountValidation
 
         foreach($users as $user) {
             if ($user->kyc && isset($user->kyc->verification_payload)) {
-                $verifcation_payload = json_decode($user->kyc->verification_payload);
-                if (isset($verifcation_payload->data)) {
-                    $kyc = $verifcation_payload->data;
-                    $regName = $user->first_name.$user->middle_name.$user->last_name;
-                    $regName = $this->removeStrings(strtolower($regName), [strtolower(Constants::WALLET_PREFIX)]);
-                    $kycName = $kyc?->firstname.$kyc?->middlename.$kyc?->lastname;
-                    $kycName = $this->removeStrings(strtolower($kycName), [strtolower(Constants::WALLET_PREFIX)]);
-    
-                    if ($kycName != $regName) {
+                $verification_payload = json_decode($user->kyc->verification_payload);
+                if (isset($verification_payload->data)) {
+                    $kyc = $verification_payload->data;
+                    if (isset($kyc->firstname)) {
+                        $this->verifyOrSuspendAccount($user, $kyc);
+                    } elseif ($kyc->accountNo) {
+                        // TODO recreate the account;
                         $user->account_status = Constants::ACCOUNT_STATUS['suspended'];
-                        $user->Save();
-                        // Send email to notify user
-                    } else {
-                        $user->first_name = Constants::WALLET_PREFIX.$user->first_name;
-                        $user->account_status = Constants::ACCOUNT_STATUS['verified'];
-                        $user->account_type = Constants::ACCOUNT_TYPE['classic'];
-                        $user->is_verified = Constants::IS_VERIFIED['yes'];
-                        $user->kyc->verification_status = Constants::ACCOUNT_STATUS['incomplete'];
-                        $user->kyc->save();
                         $user->save();
                     }
+                } else {
+                    $user->account_status = Constants::ACCOUNT_STATUS['suspended'];
+                    $user->Save();
+                    // Send email
                 }
             } else {
                 $user->account_status = Constants::ACCOUNT_STATUS['suspended'];
                 $user->Save();
                 // Send email
             }
+        }
+    }
+
+    private function verifyOrSuspendAccount(object $user, object $kyc)
+    {
+        $regName = $user->first_name.$user->middle_name.$user->last_name;
+        $regName = $this->removeStrings(strtolower($regName), [strtolower(Constants::WALLET_PREFIX)]);
+        $kycName = $kyc->firstname.$kyc->middlename.$kyc->lastname;
+        $kycName = $this->removeStrings(strtolower($kycName), [strtolower(Constants::WALLET_PREFIX)]);
+
+        if ($kycName != $regName) {
+            $user->account_status = Constants::ACCOUNT_STATUS['suspended'];
+            $user->Save();
+            // Send email to notify user
+        } else {
+            $user->first_name = Constants::WALLET_PREFIX.$user->first_name;
+            $user->account_status = Constants::ACCOUNT_STATUS['verified'];
+            $user->account_type = Constants::ACCOUNT_TYPE['classic'];
+            $user->is_verified = Constants::IS_VERIFIED['yes'];
+            $user->kyc->verification_status = Constants::ACCOUNT_STATUS['incomplete'];
+            $user->kyc->save();
+            $user->save();
         }
     }
 }
