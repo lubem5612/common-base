@@ -5,7 +5,7 @@ namespace Transave\CommonBase;
 
 
 use Transave\CommonBase\Actions\Kuda\Account\CreateVirtualAccount;
-use Transave\CommonBase\Actions\Kuda\Account\UpdateVirtualAccount;
+use Transave\CommonBase\Actions\VFD\Account\UpdateVirtualAccount;
 
 class CommonBase
 {

@@ -5,7 +5,7 @@ namespace Transave\CommonBase\Actions\User;
 
 
 use Transave\CommonBase\Actions\Action;
-use Transave\CommonBase\Actions\Kuda\Account\UpdateVirtualAccount;
+use Transave\CommonBase\Actions\VFD\Account\UpdateVirtualAccount;
 use Transave\CommonBase\Http\Models\User;
 
 class ChangeEmail extends Action
