@@ -27,7 +27,7 @@ class SearchResource
     public function __construct(array $request)
     {
         $this->request = $request;
-        $this->routeConfig = config('commonbase.endpoints.routes');
+        $this->routeConfig = config('endpoints.routes');
     }
 
     public function execute()
@@ -49,7 +49,7 @@ class SearchResource
 
     private function setModel()
     {
-        abort_if(!array_key_exists('model', $this->route), 401, 'model not configured');
+        abort_if(!array_key_exists('model', $this->route), 404, 'model not configured');
         $this->model = $this->route['model'];
         $this->queryBuilder = $this->model::query();
         return $this;
@@ -70,9 +70,10 @@ class SearchResource
                 $country = request()->query('country_id');
                 if (isset($country)) {
                     $this->queryBuilder->where('country_id', $country);
+                } else {
+                    $this->queryBuilder->where('name', 'like', "%$this->searchParam%")
+                        ->orWhere('capital', 'like', "%$this->searchParam%");
                 }
-                $this->queryBuilder->where('name', 'like', "%$this->searchParam%")
-                    ->orWhere('capital', 'like', "%$this->searchParam%");
                 break;
             }
 
@@ -160,7 +161,7 @@ class SearchResource
 
     private function validateAndSetDefaults()
     {
-        abort_if(!array_key_exists($this->request['endpoint'], $this->routeConfig), 401, 'endpoint not found');
+        abort_if(!array_key_exists($this->request['endpoint'], $this->routeConfig), 404, 'endpoint not found');
         $this->route = $this->routeConfig[$this->request['endpoint']];
         $this->startAt = request()->query('start');
         $this->endAt = request()->query('end');
