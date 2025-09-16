@@ -54,7 +54,10 @@ class UpdateUser
         $data = Arr::only($this->validatedData, ['first_name', 'last_name', 'middle_name', 'business_name', 'bvn']);
         $this->user->fill($data)->save();
 
-        return $this->sendSuccess($this->user->refresh()->load('kyc'), 'user account updated');
+        $message = (array_key_exists('identity_card', $this->validatedData)) 
+            ? 'Request received and currently under review, you will receive an email when done'
+            : 'User account updated';
+        return $this->sendSuccess($this->user->refresh()->load('kyc'), $message);
     }
 
     private function setKyCData()
