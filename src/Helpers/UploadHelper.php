@@ -19,17 +19,20 @@ class UploadHelper
     private $isSuccessful = false;
     private $uploadedFileError = [];
     private $uploadedFileMessage = '';
+    private $baseURL = '';
 
     public function uploadFile(UploadedFile $uploadedFile, $folder)
     {
         try{
             $this->setStorageConfig();
+            $this->setBaseURL();
             $extension = $uploadedFile->getClientOriginalExtension();
             $filename = uniqid().'.'.$extension;
+            $assetFolder = config('commonbase.storage.prefix').'/'.$folder;
 
-            $path = $uploadedFile->storePubliclyAs($folder, $filename, $this->disk);
+            $path = $uploadedFile->storePubliclyAs($assetFolder, $filename, $this->disk);
             if ($path) {
-                $this->uploadedFilePath = $this->storageConfig['storage_url'].'/'.config('commonbase.storage.prefix').'/'.$path;
+                $this->uploadedFilePath = $this->baseURL .'/storage'. $this->storageConfig['storage_url'].'/'.$path;
                 $this->uploadedFileSize = $uploadedFile->getSize();
                 $this->uploadedFileExtension = $extension;
                 $this->isSuccessful = true;
@@ -87,14 +90,21 @@ class UploadHelper
 
     private function setRealPath($url)
     {
-        $prefix = config('commonbase.storage.prefix').'/';
-        $this->fileRealPath = Str::after($url, $prefix);
+        $url_parts = parse_url($url);
+        $path = $url_parts['path'];
+
+        $this->fileRealPath = str_replace( '/storage/', '', $path);
     }
 
     private function setStorageConfig()
     {
         $this->disk = config('commonbase.storage.driver');
         $this->storageConfig = config("commonbase.$this->disk");
+    }
+
+    private function setBaseURL()
+    {
+        $this->baseURL = config('commonbase.app_url');
     }
 
     private function response()
