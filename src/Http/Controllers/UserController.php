@@ -5,7 +5,7 @@ namespace Transave\CommonBase\Http\Controllers;
 
 
 use Illuminate\Http\Request;
-use Transave\CommonBase\Actions\Kuda\Account\UpdateVirtualAccount;
+use Transave\CommonBase\Actions\VFD\Account\UpdateVirtualAccount;
 use Transave\CommonBase\Actions\User\ChangeEmail;
 use Transave\CommonBase\Actions\User\ChangePassword;
 use Transave\CommonBase\Actions\User\DeleteAccount;

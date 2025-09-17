@@ -14,7 +14,7 @@ use Transave\CommonBase\Actions\Kuda\Account\EnableVirtualAccount;
 use Transave\CommonBase\Actions\Kuda\Account\GetVirtualAccount;
 use Transave\CommonBase\Actions\Kuda\Account\ListVirtualAccounts;
 use Transave\CommonBase\Actions\Kuda\Account\MainAccountBalance;
-use Transave\CommonBase\Actions\Kuda\Account\UpdateVirtualAccount;
+use Transave\CommonBase\Actions\VFD\Account\UpdateVirtualAccount;
 use Transave\CommonBase\Actions\Kuda\Account\VirtualAccountBalance;
 use Transave\CommonBase\Http\Models\Country;
 use Transave\CommonBase\Http\Models\Lga;
