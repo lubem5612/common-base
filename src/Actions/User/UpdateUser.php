@@ -80,6 +80,8 @@ class UpdateUser
             'income_range',
             'verification_status',
             'is_loan_compliant',
+            'bvn',
+            'isFinalSubmission'
         ]);
 
         // return $this->sendSuccess($this->validatedData, 'user account updated');
