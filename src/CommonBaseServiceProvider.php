@@ -13,6 +13,7 @@ use Transave\CommonBase\Http\Middlewares\AllowIfAdmin;
 use Transave\CommonBase\Http\Models\User;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
+use Transave\CommonBase\Console\ValidateNewAccounts;
 
 class CommonBaseServiceProvider extends ServiceProvider
 {
@@ -101,6 +102,7 @@ class CommonBaseServiceProvider extends ServiceProvider
         // Registering package commands.
         $this->commands([
             Seeder::class,
+            ValidateNewAccounts::class
         ]);
     }
 
