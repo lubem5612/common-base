@@ -81,7 +81,8 @@ class UpdateVirtualAccount
             'date_of_employment' => ['nullable', 'date'],
             'number_of_children' => ['nullable', 'integer'],
             'income_range' => ['nullable'],
-            'idBack' => ['nullable']
+            'idBack' => ['nullable'],
+            'isFinalSubmission' => ['nullable']
         ]);
         return $this;
     }
