@@ -18,7 +18,7 @@ class GetResource extends Action
     public function __construct(array $request)
     {
         $this->request = $request;
-        $this->routeConfig = config('commonbase.endpoints.routes');
+        $this->routeConfig = config('endpoints.routes');
     }
 
     public function execute()

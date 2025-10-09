@@ -15,7 +15,7 @@ class UpdateUser
 {
     use ValidationHelper, ResponseHelper;
     private $request, $validatedData, $kycData, $walletData;
-    private User $user;
+    private ?User $user;
     private Kyc $kyc;
     private $uploader;
 
@@ -54,7 +54,10 @@ class UpdateUser
         $data = Arr::only($this->validatedData, ['first_name', 'last_name', 'middle_name', 'business_name', 'bvn']);
         $this->user->fill($data)->save();
 
-        return $this->sendSuccess($this->user->refresh()->load('kyc'), 'user account updated');
+        $message = (array_key_exists('identity_card', $this->validatedData)) 
+            ? 'Request received and currently under review, you will receive an email when done'
+            : 'User account updated';
+        return $this->sendSuccess($this->user->refresh()->load('kyc'), $message);
     }
 
     private function setKyCData()
@@ -77,7 +80,11 @@ class UpdateUser
             'income_range',
             'verification_status',
             'is_loan_compliant',
+            'bvn',
+            'isFinalSubmission'
         ]);
+
+        // return $this->sendSuccess($this->validatedData, 'user account updated');
         return $this;
     }
 
@@ -98,6 +105,12 @@ class UpdateUser
             $response = $this->uploader->uploadOrReplaceFile($this->validatedData['identity_card'], 'identity-cards', $this->kyc, 'identity_card_url');
             if ($response['success']) {
                 $this->kycData['identity_card_url'] = $response['upload_url'];
+            }
+        }
+        if (array_key_exists('identity_card_back', $this->validatedData)) {
+            $response = $this->uploader->uploadOrReplaceFile($this->validatedData['identity_card_back'], 'identity-cards', $this->kyc, 'identity_card_back_url');
+            if ($response['success']) {
+                $this->kycData['identity_card_back_url'] = $response['upload_url'];
             }
         }
         return $this;
@@ -130,6 +143,12 @@ class UpdateUser
 
     private function updateKycRecord()
     {
+        $kyc = $this->kyc;
+        $currentPayload = json_decode($kyc->verification_payload, true);
+        $newPayload = $this->kycData;
+        $currentPayload['data'] = array_merge($currentPayload['data'], $newPayload);
+        
+        $kyc->verification_payload = json_encode($currentPayload);
         $this->kyc->fill($this->kycData)->save();
         return $this;
     }

@@ -2,6 +2,7 @@
 
 return [
     'app_env'           => env('APP_ENV', 'testing'),
+    'app_url'           => env('APP_URL', 'localhost'),
     'sendchamp' => [
         'username'      => env('SENDCHAMP_USERNAME', 'Sendchamp'),
         'route'         => env('SENDCHAMP_ROUTE', 'dnd'),
@@ -62,6 +63,11 @@ return [
     ],
 
     'local' => [
+        'storage_url' => '',
+        'id' => '',
+    ],
+
+    'public' => [
         'storage_url' => '',
         'id' => '',
     ],

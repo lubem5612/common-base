@@ -61,24 +61,20 @@ class WebhookService extends Action
     private function sendResponse()
     {
         $message = 'Webhook received successfully';
-        $transaction = Transaction::where('reference', $this->request['reference'])->first();
-        if ($transaction) {
-            $message = 'Already processed';
-        } else {
-            $data = [
-                'user_id' => $this->wallet->user_id,
-                'amount' => $this->request['amount'],
-                'reference' => $this->request['reference'],
-                'commission' => 0.00,
-                'charge' => 0.00,
-                'type' => Constants::TRANSACTION_TYPE['CREDIT'],
-                'description' => $this->request['originator_narration'],
-                'category' => Constants::CATEGORIES['WALLET_FUNDING'],
-                'status' => Constants::SUCCESSFUL,
-                'payload' => json_encode($this->request)
-            ];
-            WalletCreditJob::dispatch($data);
-        }
+        $data = [
+            'user_id' => $this->wallet->user_id,
+            'amount' => $this->request['amount'],
+            'reference' => $this->request['reference'],
+            'commission' => 0.00,
+            'charge' => 0.00,
+            'type' => Constants::TRANSACTION_TYPE['CREDIT'],
+            'description' => $this->request['originator_narration'],
+            'category' => Constants::CATEGORIES['WALLET_FUNDING'],
+            'status' => Constants::SUCCESSFUL,
+            'payload' => json_encode($this->request)
+        ];
+        WalletCreditJob::dispatch($data);
+        
         $dto = Arr::except($this->request, ['toClient', 'fromClient', 'senderBank', 'recipientBank']);
         return response()->json(['message' => $message, 'data' => $dto, 'success' => true ], 200);
     }
